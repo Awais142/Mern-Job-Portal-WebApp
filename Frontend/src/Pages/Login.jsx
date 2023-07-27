@@ -24,7 +24,7 @@ const LoginForm = () => {
     const success = await login(email, password, role);
     if (success) {
       // Show success toast
-      toast.success("Login successful Redirecting !");
+      toast.success("Login successful! Redirecting...");
 
       // Delay navigation for 2 seconds
       setTimeout(() => {
@@ -107,7 +107,18 @@ const LoginForm = () => {
           >
             Login
           </button>
-          {/* Login Link */}
+
+          {/* Forgot Password Link */}
+          <p className="text-center text-gray-600 mt-4">
+            <Link
+              to="/forgot-password"
+              className="text-gray-500 hover:underline font-bold"
+            >
+              Forgot Password?
+            </Link>
+          </p>
+
+          {/* Register Link */}
           <p className="text-center text-gray-600 mt-4">
             Don't have an account?{" "}
             <Link
