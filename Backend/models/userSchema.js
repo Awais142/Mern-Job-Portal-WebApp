@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 import validator from "validator";
 
 const userSchema = new mongoose.Schema({
@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validate: [validator.isEmail, "Please provide valid email"],
+    validate: [validator.isEmail, "Please provide a valid email"],
   },
   phone: { type: String, required: true },
   address: { type: String, required: true },
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minLength: [8, "Password Must contain 8 characters"],
+    minLength: [8, "Password must contain at least 8 characters"],
   },
   resume: { public_id: String, url: String }, // You can store the link to the resume (if uploaded) here
   coverLetter: { type: String }, // Text or link to cover letter
@@ -36,4 +36,5 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("User", userSchema);
+// Export the User model
+export const User = mongoose.model("User", userSchema);

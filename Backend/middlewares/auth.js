@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models/userSchema.js";
+import { User } from "../models/userSchema";
 
 export const isAuthenticated = async (req, res, next) => {
   try {
@@ -24,11 +24,9 @@ export const isAuthenticated = async (req, res, next) => {
 export const isAuthorized = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return res
-        .status(403)
-        .json({
-          message: `${req.user.role} is not allowed to access this resource.`,
-        });
+      return res.status(403).json({
+        message: `${req.user.role} is not allowed to access this resource.`,
+      });
     }
     next();
   };
