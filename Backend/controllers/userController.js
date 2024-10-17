@@ -67,7 +67,6 @@ export const register = async (req, res) => {
 // Login function
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
-  // console.log("Email and role From Login", email, role);
 
   try {
     // Validate if all fields are provided
@@ -100,14 +99,39 @@ export const login = async (req, res) => {
         expiresIn: "1h", // Token expires in 1 hour
       }
     );
-    // Send success response with token
+
+    // Set token in cookies
+    res.cookie("token", token, {
+      httpOnly: true, // Cookie can't be accessed by client-side JavaScript
+      // secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Strict", // Prevent CSRF attacks by ensuring cookies are sent only to the same site
+      maxAge: 3600000, // 1 hour in milliseconds
+    });
+
+    // Send success response
     res.status(200).json({
       message: "Login successful.",
-      user: { id: user._id, name: user.name, roles: user.role },
-      token,
+      user: { id: user._id, name: user.name, role: user.role },
     });
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Error logging in.", error });
+  }
+};
+// Get User function to get Authorized user data
+export const getUser = async (req, res) => {
+  try {
+    const user = req.user;
+    res.status(200).json({
+      success: true,
+      user,
+    });
+    console.log("user from getUser", user);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve user information.",
+      error: error.message,
+    });
   }
 };
