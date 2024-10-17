@@ -118,6 +118,30 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Error logging in.", error });
   }
 };
+
+//Logout Function
+export const logout = async (req, res) => {
+  try {
+    // Clear the token cookie by setting it to an empty string and expiring it
+    res
+      .status(200)
+      .cookie("token", "", {
+        expires: new Date(Date.now()), // Expire the cookie immediately
+        httpOnly: true, // Ensure cookie is only accessible by the server
+      })
+      .json({
+        success: true,
+        message: "Logged out successfully.",
+      });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error while logging out.",
+      error: error.message,
+    });
+  }
+};
+
 // Get User function to get Authorized user data
 export const getUser = async (req, res) => {
   try {
