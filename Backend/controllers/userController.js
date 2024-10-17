@@ -3,29 +3,38 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/userSchema.js";
 
 // Register function
+
 export const register = async (req, res) => {
   const {
-    username,
+    name, // Changed from username to name
     email,
     password,
     phone,
     address,
-    firstNiche,
-    secondNiche,
-    thirdNiche,
+    niches, // Get the entire niches object from the body
+    role,
   } = req.body;
-  console.log("username: ", username, "Email is", email);
+
+  console.log("Request Body:", req.body); // Log the entire request body to see what is being received
+
+  const { firstNiche, secondNiche, thirdNiche } = niches;
+  console.log("Name: ", name, "Email: ", email, "Password: ", password);
+  console.log("Phone: ", phone, "Address: ", address);
+  console.log("Niches:", firstNiche, secondNiche, thirdNiche);
+  console.log("Role: ", role);
+
   try {
     // Check if any field is missing
     if (
-      !username ||
+      !name ||
       !email ||
       !password ||
       !phone ||
       !address ||
       !firstNiche ||
       !secondNiche ||
-      !thirdNiche
+      !thirdNiche ||
+      !role
     ) {
       return res.status(400).json({ message: "All fields are required." });
     }
@@ -38,7 +47,7 @@ export const register = async (req, res) => {
 
     // Create a new user
     const newUser = new User({
-      username,
+      name, // Use 'name' instead of 'username'
       email,
       password,
       phone,
@@ -48,6 +57,7 @@ export const register = async (req, res) => {
         secondNiche,
         thirdNiche,
       },
+      role, // Assign role from request body
     });
 
     // Save the user

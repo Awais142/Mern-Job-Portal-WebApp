@@ -13,9 +13,9 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   address: { type: String, required: true },
   niches: {
-    type: String,
-    enum: ["firstNiche", "secondNiche", "thirdNiche"],
-    required: true,
+    firstNiche: { type: String, required: true },
+    secondNiche: { type: String, required: true },
+    thirdNiche: { type: String, required: true },
   },
   password: {
     type: String,
