@@ -67,21 +67,31 @@ export const register = async (req, res) => {
 // Login function
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
+  // console.log("Email and role From Login", email, role);
 
   try {
+    // Validate if all fields are provided
     if (!email || !password || !role) {
-      return res.status(400).json({ message: "All field are required." });
+      return res.status(400).json({ message: "All fields are required." });
     }
 
-    const user = await User.findOne({ email, role });
+    // Find the user by email only
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
+
+    // Check if the role matches
+    if (user.role !== role) {
+      return res.status(403).json({ message: "Incorrect role for this user." });
+    }
+
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid password." });
     }
+
     // Generate a JWT token
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -90,12 +100,14 @@ export const login = async (req, res) => {
         expiresIn: "1h", // Token expires in 1 hour
       }
     );
+    // Send success response with token
     res.status(200).json({
-      message: "Login Successful.",
+      message: "Login successful.",
       user: { id: user._id, name: user.name, roles: user.role },
       token,
     });
   } catch (error) {
+    console.error("Login Error:", error);
     res.status(500).json({ message: "Error logging in.", error });
   }
 };
