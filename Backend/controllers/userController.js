@@ -15,28 +15,21 @@ export const register = async (req, res) => {
     role,
   } = req.body;
 
-  console.log("Request Body:", req.body); // Log the entire request body to see what is being received
-
-  const { firstNiche, secondNiche, thirdNiche } = niches;
-  console.log("Name: ", name, "Email: ", email, "Password: ", password);
-  console.log("Phone: ", phone, "Address: ", address);
-  console.log("Niches:", firstNiche, secondNiche, thirdNiche);
-  console.log("Role: ", role);
+  const { firstNiche, secondNiche, thirdNiche } = niches || {}; // Handle case where niches may be undefined
 
   try {
-    // Check if any field is missing
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !phone ||
-      !address ||
-      !firstNiche ||
-      !secondNiche ||
-      !thirdNiche ||
-      !role
-    ) {
+    // Check if common fields are missing
+    if (!name || !email || !password || !phone || !address || !role) {
       return res.status(400).json({ message: "All fields are required." });
+    }
+
+    // If the role is 'Job Seeker', check if niches are provided
+    if (role === "Job Seeker") {
+      if (!firstNiche || !secondNiche || !thirdNiche) {
+        return res
+          .status(400)
+          .json({ message: "Please choose your preferred Niches" });
+      }
     }
 
     // Check if the user already exists
@@ -47,17 +40,16 @@ export const register = async (req, res) => {
 
     // Create a new user
     const newUser = new User({
-      name, // Use 'name' instead of 'username'
+      name,
       email,
       password,
       phone,
       address,
-      niches: {
-        firstNiche,
-        secondNiche,
-        thirdNiche,
-      },
       role, // Assign role from request body
+      niches:
+        role === "Job Seeker"
+          ? { firstNiche, secondNiche, thirdNiche }
+          : undefined, // Only include niches for 'Job Seeker'
     });
 
     // Save the user
@@ -74,30 +66,33 @@ export const register = async (req, res) => {
 
 // Login function
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
   try {
-    // Find the user by email
-    const user = await User.findOne({ email });
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "All field are required." });
+    }
+
+    const user = await User.findOne({ email, role });
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid password." });
     }
-
     // Generate a JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1h", // Token expires in 1 hour
-    });
-
-    // Respond with the user data and token
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1h", // Token expires in 1 hour
+      }
+    );
     res.status(200).json({
-      message: "Login successful.",
-      user: { id: user._id, username: user.username, role: user.role },
+      message: "Login Successful.",
+      user: { id: user._id, name: user.name, roles: user.role },
       token,
     });
   } catch (error) {

@@ -13,9 +13,9 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   address: { type: String, required: true },
   niches: {
-    firstNiche: { type: String, required: true },
-    secondNiche: { type: String, required: true },
-    thirdNiche: { type: String, required: true },
+    firstNiche: { type: String },
+    secondNiche: { type: String },
+    thirdNiche: { type: String },
   },
   password: {
     type: String,
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   resume: { public_id: String, url: String }, // You can store the link to the resume (if uploaded) here
   coverLetter: { type: String }, // Text or link to cover letter
-  role: { type: String, required: true, enum: ["employer", "user"] },
+  role: { type: String, required: true, enum: ["Employer", "Job Seeker"] },
   createdAt: { type: Date, default: Date.now },
 });
 
