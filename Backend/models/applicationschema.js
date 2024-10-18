@@ -28,7 +28,6 @@ const applicationSchema = new mongoose.Schema({
     resume: {
       public_id: String, // For cloud storage (like Cloudinary)
       url: String, // URL of the uploaded resume
-      required: true, // Assuming resume is required
     },
     coverLetter: {
       type: String,

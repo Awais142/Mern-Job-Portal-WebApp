@@ -1,11 +1,12 @@
 import express from "express";
+import { isAuthenticated, isAuthorized } from "../middlewares/auth.js";
 
 import {
   postApplication,
   employerGetAllApplication,
   jobSeekerGetAllApplication,
   deleteApplication,
-} from "../controllers/applicationController";
+} from "../controllers/applicationController.js";
 
 const router = express.Router();
 
@@ -28,3 +29,4 @@ router.get(
   jobSeekerGetAllApplication
 );
 router.delete("/delete/:id", isAuthenticated, deleteApplication);
+export default router;

@@ -1,5 +1,5 @@
 import { Application } from "../models/applicationSchema.js";
-import { Job } from "../models/jobSchema.js";
+import { Job } from "../models/jobsSchema.js";
 
 export const postApplication = (req, res) => {
   const { id } = req.params;
