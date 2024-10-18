@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
 import jobsRouter from "./routes/jobsRouter.js";
+import applicationRouter from "./routes/applicationRouter.js";
 
 dotenv.config();
 
@@ -28,6 +29,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRouter);
 app.use("/api/jobs", jobsRouter);
-
+app.use("/api/app", applicationRouter);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
