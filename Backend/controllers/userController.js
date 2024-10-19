@@ -122,7 +122,7 @@ export const login = async (req, res) => {
 
     // Check if the role matches
     if (user.role !== role) {
-      return res.status(403).json({ message: "Incorrect role for this user." });
+      return res.status(403).json({ message: "Authentication failed" });
     }
 
     // Check if the password is correct
