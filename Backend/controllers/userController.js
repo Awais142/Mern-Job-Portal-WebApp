@@ -61,7 +61,13 @@ export const register = async (req, res) => {
           // Upload resume to Cloudinary
           const cloudinaryResponse = await cloudinary.uploader.upload(
             resume.tempFilePath,
-            { folder: "Job_Seekers_Resume" }
+            {
+              folder: "Job_Seekers_Resume",
+              resource_type: "raw", // Ensures it's treated as a file (not an image)
+              use_filename: true, // Use the original file name
+              unique_filename: false, // Keep the file name unique in the folder
+              access_mode: "public", // Ensure public access to the file
+            }
           );
 
           if (!cloudinaryResponse || cloudinaryResponse.error) {
