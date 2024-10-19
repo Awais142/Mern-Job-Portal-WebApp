@@ -1,66 +1,100 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userSchema.js";
+import { v2 as cloudinary } from "cloudinary";
 
-// Register function
-
+// Register User
 export const register = async (req, res) => {
-  const {
-    name, // Changed from username to name
-    email,
-    password,
-    phone,
-    address,
-    niches, // Get the entire niches object from the body
-    role,
-  } = req.body;
-
-  const { firstNiche, secondNiche, thirdNiche } = niches || {}; // Handle case where niches may be undefined
-
   try {
-    // Check if common fields are missing
-    if (!name || !email || !password || !phone || !address || !role) {
+    const {
+      name,
+      email,
+      phone,
+      address,
+      password,
+      role,
+      firstNiche,
+      secondNiche,
+      thirdNiche,
+      coverLetter,
+    } = req.body;
+
+    // Check if required fields are missing
+    if (!name || !email || !phone || !address || !password || !role) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
     // If the role is 'Job Seeker', check if niches are provided
-    if (role === "Job Seeker") {
-      if (!firstNiche || !secondNiche || !thirdNiche) {
-        return res
-          .status(400)
-          .json({ message: "Please choose your preferred Niches" });
-      }
+    if (role === "Job Seeker" && (!firstNiche || !secondNiche || !thirdNiche)) {
+      return res
+        .status(400)
+        .json({ message: "Please provide your preferred job niches." });
     }
 
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists." });
+      return res.status(400).json({ message: "Email is already registered." });
     }
 
-    // Create a new user
-    const newUser = new User({
+    // Prepare user data
+    const userData = {
       name,
       email,
-      password,
       phone,
       address,
-      role, // Assign role from request body
-      niches:
-        role === "Job Seeker"
-          ? { firstNiche, secondNiche, thirdNiche }
-          : undefined, // Only include niches for 'Job Seeker'
+      password,
+      role,
+      niches: {
+        firstNiche,
+        secondNiche,
+        thirdNiche,
+      },
+      coverLetter,
+    };
+
+    // If the user uploaded a resume, handle file upload
+    if (req.files && req.files.resume) {
+      const { resume } = req.files;
+      if (resume) {
+        try {
+          // Upload resume to Cloudinary
+          const cloudinaryResponse = await cloudinary.uploader.upload(
+            resume.tempFilePath,
+            { folder: "Job_Seekers_Resume" }
+          );
+
+          if (!cloudinaryResponse || cloudinaryResponse.error) {
+            return res
+              .status(500)
+              .json({ message: "Failed to upload resume to cloud." });
+          }
+
+          // Add resume info to userData
+          userData.resume = {
+            public_id: cloudinaryResponse.public_id,
+            url: cloudinaryResponse.secure_url,
+          };
+        } catch (error) {
+          return res.status(500).json({ message: "Failed to upload resume." });
+        }
+      }
+    }
+
+    // Create the user
+    const user = await User.create(userData);
+
+    // Send success response without the password
+    const userResponse = { ...user._doc };
+    delete userResponse.password;
+
+    res.status(201).json({
+      message: "User registered successfully.",
+      user: userResponse,
     });
-
-    // Save the user
-    await newUser.save();
-
-    // Respond with the created user info (without the password)
-    res
-      .status(201)
-      .json({ message: "User registered successfully.", user: newUser });
   } catch (error) {
-    res.status(500).json({ message: "Error registering user.", error });
+    // Handle any errors that occur during the process
+    return res.status(500).json({ message: "An error occurred.", error });
   }
 };
 

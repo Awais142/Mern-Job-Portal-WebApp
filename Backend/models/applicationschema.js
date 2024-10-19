@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 
+// Define the Application Schema
 const applicationSchema = new mongoose.Schema({
   jobSeekerInfo: {
     id: {
@@ -18,7 +19,7 @@ const applicationSchema = new mongoose.Schema({
       validate: [validator.isEmail, "Please provide a valid email."],
     },
     phone: {
-      type: Number,
+      type: String, // Change to String to allow for formatting
       required: true,
     },
     address: {
@@ -26,8 +27,8 @@ const applicationSchema = new mongoose.Schema({
       required: true,
     },
     resume: {
-      public_id: String, // For cloud storage (like Cloudinary)
-      url: String, // URL of the uploaded resume
+      public_id: String,
+      url: String,
     },
     coverLetter: {
       type: String,
