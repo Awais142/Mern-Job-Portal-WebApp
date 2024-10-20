@@ -5,7 +5,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-gradient-to-r from-gray-100 via-[#bce1ff] poppins-medium to-gray-100 w-full p-4 fixed top-0 left-0 z-50">
+    <nav className="bg-gray-100 w-full p-4 fixed top-0 left-0 z-50">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Left: Logo */}
         <div className="text-2xl font-bold text-gray-800">MyLogo</div>
