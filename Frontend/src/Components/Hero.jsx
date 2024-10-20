@@ -1,11 +1,25 @@
-import React from "react";
+// src/components/Hero.js (adjust the path as necessary)
+import React, { useState } from "react"; // Don't forget to import useState
 import { BackgroundBeamsWithCollision } from "./ui/background-beams-with-collision";
-import { FaSearch } from "react-icons/fa"; // Import search icon
+import { getAllJobs } from "../Services/Api/JobsApi.js"; // Use curly braces for named import
 
 const Hero = () => {
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const handleSearch = async () => {
+    try {
+      const data = await getAllJobs({ searchKeyword });
+      if (data.success) {
+        console.log("Jobs fetched successfully:", data);
+        // Handle fetched jobs here (e.g., set state or display)
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching jobs:", error.message);
+    }
+  };
+
   return (
     <div className="relative h-screen flex flex-col justify-center items-center px-4">
-      {/* Background Beams */}
       <BackgroundBeamsWithCollision>
         <div className="text-center relative z-20">
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 poppins-bold tracking-tight">
@@ -26,11 +40,12 @@ const Hero = () => {
                 id="search"
                 className="block w-full rounded-md border-0 py-4 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="Search for jobs"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
               />
               <button
-                className="bg-gray-500 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg absolute right-1 top-2
-              
-               "
+                className="bg-gray-500 hover:bg-zinc-600 text-white px-4 py-2 rounded-lg absolute right-1 top-2"
+                onClick={handleSearch}
               >
                 Find Jobs
               </button>
