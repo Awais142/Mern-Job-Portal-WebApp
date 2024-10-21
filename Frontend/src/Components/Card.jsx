@@ -1,21 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaMapMarkerAlt, FaRupeeSign, FaCalendarAlt } from "react-icons/fa"; // Importing icons
+import { FaMapMarkerAlt, FaDollarSign, FaCalendarAlt } from "react-icons/fa"; // Importing icons
 
 const Card = ({ title, companyName, location, salary, postedOn, link }) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 relative">
+    <div className="bg-white shadow-md rounded-lg p-6 relative min-h-72 hover:cursor-pointer hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
       <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-      <p className="text-gray-700">Company: {companyName}</p>
+      <p className="text-gray-700 mt-1">Company: {companyName}</p>
 
       {/* Location with Icon */}
-      <p className="text-gray-700 flex items-center">
+      <p className="text-gray-700 flex items-center mt-8">
         <FaMapMarkerAlt className="mr-2 text-zinc-600" /> {location}
       </p>
 
       {/* Salary with Icon */}
       <p className="text-gray-700 flex items-center">
-        <FaRupeeSign className="mr-2 text-zinc-600" /> Rs. {salary}
+        <FaDollarSign className="mr-2 text-zinc-600" /> Rs. {salary}
       </p>
 
       {/* Posted On with Calendar Icon */}
