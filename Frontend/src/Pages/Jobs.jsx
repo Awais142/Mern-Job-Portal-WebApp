@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "../Components/Spinner";
-import { Link } from "react-router-dom";
 import useJobStore from "../Store/jobStore";
 import { cities, nichesArray } from "../Data/jobsData";
 import Card from "../Components/Card";

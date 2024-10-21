@@ -2,6 +2,7 @@
 import React, { useState } from "react"; // Don't forget to import useState
 import { BackgroundBeamsWithCollision } from "./ui/background-beams-with-collision";
 import { getAllJobs } from "../Services/Api/JobsApi.js"; // Use curly braces for named import
+import { Cover } from "./ui/cover.jsx";
 
 const Hero = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -22,11 +23,13 @@ const Hero = () => {
     <div className="relative h-screen flex flex-col justify-center items-center px-4">
       <BackgroundBeamsWithCollision>
         <div className="text-center relative z-20">
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 poppins-bold tracking-tight">
-            Find Your Perfect Job
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 poppins-bold tracking-tight">
+            Build your dream career
             <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
               <div className="text-2xl md:text-4xl lg:text-7xl font-bold text-gray-700 poppins-bold tracking-tight">
-                <span>Start Your Journey Today!</span>
+                <span>
+                  at <Cover>Rapid speed</Cover>
+                </span>
               </div>
             </div>
           </h2>
