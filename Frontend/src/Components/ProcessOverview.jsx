@@ -17,7 +17,7 @@ const ProcessOverview = () => {
           <h4 className="text-xl font-semibold text-gray-600 mb-3">
             Create an Account
           </h4>
-          <p className="text-gray-700">
+          <p className="text-gray-700 poppins-regular">
             Sign up for a free account as a job seeker or employer. Set up your
             profile in minutes to start posting jobs or applying for jobs.
             Customize your profile to highlight your skills or requirements.
@@ -30,7 +30,7 @@ const ProcessOverview = () => {
           <h4 className="text-xl font-semibold text-gray-600 mb-3">
             Post or Browse Jobs
           </h4>
-          <p className="text-gray-700">
+          <p className="text-gray-700 poppins-regular">
             Employers can post detailed job descriptions, and job seekers can
             browse a comprehensive list of available positions. Utilize filters
             to find jobs that match your skills and preferences.
@@ -43,7 +43,7 @@ const ProcessOverview = () => {
           <h4 className="text-xl font-semibold text-gray-600 mb-3">
             Hire or Get Hired
           </h4>
-          <p className="text-gray-700">
+          <p className="text-gray-700 poppins-regular">
             Employers can shortlist candidates and extend job offers. Job
             seekers can review job offers and accept positions that align with
             their career goals.

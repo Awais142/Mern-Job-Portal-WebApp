@@ -66,7 +66,7 @@ const TopNiches = () => {
             className="card bg-white shadow-lg rounded-lg p-6 transition-transform duration-300 hover:scale-105"
           >
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-2xl font-bold text-gray-500 poppins-bold">
+              <h4 className="text-2xl font-bold text-zinc-500 poppins-bold">
                 {service.service}
               </h4>
               {service.icon} {/* Icon placed to the right */}

@@ -6,7 +6,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-100 w-full p-4 fixed top-0 left-0 z-50">
-      <div className="flex justify-between items-center max-w-7xl mx-auto poppins-regular">
+      <div className="flex justify-between items-center max-w-7xl mx-auto poppins-semibold">
         {/* Left: Logo */}
         <div className="text-2xl font-bold text-gray-800">MyLogo</div>
 
@@ -35,7 +35,7 @@ const Navbar = () => {
             href="#"
             className="hover:text-gray-900 py-2 px-4 transition-all duration-300 underline-offset-2 relative group"
           >
-            Sign In
+            Sign Up / Login
             <div className="absolute left-0 -bottom-1 w-full h-[2px] bg-gray-700 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
           </a>
           <span className="text-gray-500">|</span>
@@ -60,14 +60,11 @@ const Navbar = () => {
             ))}
             <li>
               <a href="#" className="block py-2 px-4 bg-gray-100 rounded-md">
-                Sign In
+                Sign Up / Login
               </a>
             </li>
             <li>
-              <a
-                href="#"
-                className="block py-2 px-4 bg-teal-500 text-white rounded-md"
-              >
+              <a href="#" className="block py-2 text-white rounded-md">
                 Employer / Post a Job
               </a>
             </li>
