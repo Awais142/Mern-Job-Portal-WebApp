@@ -14,10 +14,11 @@ const useUserStore = create((set) => ({
     try {
       const data = await registerUserApi(userData); // Use the API function
       set({
-        isAuthenticated: true,
+        isAuthenticated: false,
         user: data.user,
         message: "Registration successful!",
       });
+      console.log("userStore", data);
     } catch (err) {
       set({ error: err.message });
     } finally {

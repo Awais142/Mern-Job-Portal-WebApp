@@ -6,6 +6,7 @@ import Home from "./Pages/Home";
 import Jobs from "./Pages/Jobs";
 import JobDetails from "./Pages/JobsDetail";
 import Register from "./Pages/Register";
+import Login from "./Pages/Login";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/jobs/:id" element={<JobDetails />} />
 
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
 
