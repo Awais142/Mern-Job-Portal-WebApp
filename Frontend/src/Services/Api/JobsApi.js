@@ -23,3 +23,13 @@ export const getJobByIdApi = async (id) => {
     throw error; // Re-throw the error so it can be handled by the caller
   }
 };
+
+export const createJobPostApi = async (jobData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/jobs/post`, jobData);
+    return response.data; // Assuming the API sends back a success message or the created job post
+  } catch (error) {
+    console.error("Error posting the job:", error);
+    throw error; // Re-throw the error to handle it later in the UI or store
+  }
+};

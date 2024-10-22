@@ -1,10 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Footer from "./Components/Footer";
 import Home from "./Pages/Home";
 import Jobs from "./Pages/Jobs";
 import JobDetails from "./Pages/JobsDetail";
+import Register from "./Pages/Register";
 
 const App = () => {
   return (
@@ -24,7 +25,7 @@ const App = () => {
           {/* Jobs Details */}
           <Route path="/jobs/:id" element={<JobDetails />} />
 
-          {/* Add other routes here if needed */}
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
 

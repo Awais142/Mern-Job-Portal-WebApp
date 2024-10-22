@@ -1,5 +1,9 @@
 import { create } from "zustand";
-import { getAllJobs, getJobByIdApi } from "../Services/Api/JobsApi"; // Assuming this is your API file
+import {
+  getAllJobs,
+  getJobByIdApi,
+  createJobPostApi,
+} from "../Services/Api/JobsApi"; // Added createJobPost
 
 const useJobStore = create((set) => ({
   jobs: [],
@@ -35,6 +39,18 @@ const useJobStore = create((set) => ({
       set({ job: data.job, loading: false }); // Assume the response contains a "job" object
     } catch (error) {
       set({ error: error.message, loading: false });
+    }
+  },
+
+  // Create a new job post
+  createJobPost: async (jobData) => {
+    set({ loading: true, error: null }); // Start loading state before posting
+
+    try {
+      const data = await createJobPostApi(jobData); // Call the API to create a new job post
+      set((state) => ({ jobs: [...state.jobs, data.job], loading: false })); // Add the new job to the list
+    } catch (error) {
+      set({ error: error.message, loading: false }); // Handle error
     }
   },
 }));
