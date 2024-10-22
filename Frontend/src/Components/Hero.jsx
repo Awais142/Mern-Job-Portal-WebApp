@@ -20,7 +20,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative h-screen flex flex-col justify-center items-center px-4">
+    <div className="relative h-screen flex flex-col justify-center items-center">
       <BackgroundBeamsWithCollision>
         <div className="text-center relative z-20">
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 poppins-bold tracking-tight">
