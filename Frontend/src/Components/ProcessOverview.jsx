@@ -5,7 +5,7 @@ import { BiSolidLike } from "react-icons/bi";
 
 const ProcessOverview = () => {
   return (
-    <section className="how-it-works py-12 px-4 bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+    <section className="how-it-works py-12 px-4 bg-gray-100 md:min-h-screen flex flex-col items-center justify-center">
       <h3 className="text-4xl poppins-bold text-center text-gray-600 mb-8">
         How It Works
       </h3>

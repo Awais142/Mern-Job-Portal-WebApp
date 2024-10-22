@@ -5,13 +5,13 @@ import { Link } from "react-router-dom"; // Assuming you're using React Router f
 
 const Hero = () => {
   return (
-    <div className="relative h-screen flex flex-col justify-center items-center">
+    <div className="relative mt-32 md:mt-0 md:min-h-screen flex flex-col justify-center items-center">
       <BackgroundBeamsWithCollision>
         <div className="text-center relative z-20">
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 poppins-bold tracking-tight">
             Build your dream career
-            <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
-              <div className="text-2xl md:text-4xl lg:text-7xl font-bold text-gray-700 poppins-bold tracking-tight">
+            <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))] mt-4 ">
+              <div className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-700 poppins-bold tracking-tight">
                 <span>
                   at <Cover>Rapid speed</Cover>
                 </span>
