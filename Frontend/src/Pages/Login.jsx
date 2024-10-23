@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [error, setError] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   // Handle form submission
@@ -15,9 +16,8 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      // Reset error and success messages
+      // Reset error messages
       setError({});
-      setSuccessMessage("");
 
       // Make the API call to login
       const response = await axios.post(
@@ -33,7 +33,8 @@ const LoginForm = () => {
       console.log("Response data:", response.data);
 
       // Extract token and user data from the response
-      const { token, user, message } = response.data; // Adjusted to match your response structure
+      const { token, user } = response.data; // Adjusted to match your response structure
+      const { id, name, role: userRole } = user; // Destructuring user details
 
       // Ensure the token exists
       if (!token) {
@@ -42,19 +43,15 @@ const LoginForm = () => {
 
       // Store the token in local storage
       localStorage.setItem("token", token);
-      console.log("Stored token:", token);
+      // console.log("Stored token:", token);
 
-      // Display success toast
-      setSuccessMessage(message); // Using the message from response
+      // Show success toast message
+      toast.success("Login successful!");
 
       // Delay navigation for 2 seconds to show the success message
       setTimeout(() => {
         // Navigate based on user role
-        navigate(
-          user.role === "Employer"
-            ? "/employer-dashboard"
-            : "/job-seeker-dashboard"
-        );
+        navigate(userRole === "Employer" ? "/" : "/");
       }, 2000);
     } catch (err) {
       // Handle any errors during the login process and set specific error messages
@@ -82,13 +79,6 @@ const LoginForm = () => {
         {/* Display general error message */}
         {error.general && (
           <p className="text-red-500 mb-4 text-center">{error.general}</p>
-        )}
-
-        {/* Success toast */}
-        {successMessage && (
-          <div className="mb-4 bg-green-100 text-green-800 text-center p-2 rounded">
-            {successMessage}
-          </div>
         )}
 
         <form onSubmit={handleSubmit}>
@@ -146,6 +136,9 @@ const LoginForm = () => {
           </button>
         </form>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

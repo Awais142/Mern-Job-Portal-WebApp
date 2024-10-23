@@ -107,7 +107,7 @@ export const register = async (req, res) => {
 // Login function
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
-  console.log("From User Controller", email, password, role);
+  // console.log("From User Controller", email, password, role);
 
   try {
     // Validate if all fields are provided
@@ -129,7 +129,7 @@ export const login = async (req, res) => {
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or passowrd." });
+      return res.status(401).json({ message: "Invalid email or password." });
     }
 
     // Generate a JWT token
@@ -144,9 +144,11 @@ export const login = async (req, res) => {
     res.status(200).json({
       message: "Login successful.",
       token,
-      id: user._id,
-      name: user.name,
-      role: user.role,
+      user: {
+        id: user._id,
+        name: user.name,
+        role: user.role,
+      },
     });
   } catch (error) {
     console.error("Login Error:", error);
