@@ -107,6 +107,7 @@ export const register = async (req, res) => {
 // Login function
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
+  console.log("From User Controller", email, password, role);
 
   try {
     // Validate if all fields are provided
@@ -128,7 +129,7 @@ export const login = async (req, res) => {
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password." });
+      return res.status(401).json({ message: "Invalid email or passowrd." });
     }
 
     // Generate a JWT token
@@ -139,19 +140,13 @@ export const login = async (req, res) => {
         expiresIn: "1h", // Token expires in 1 hour
       }
     );
-
-    // Set token in cookies
-    res.cookie("token", token, {
-      httpOnly: true, // Cookie can't be accessed by client-side JavaScript
-      // secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: "Strict", // Prevent CSRF attacks by ensuring cookies are sent only to the same site
-      maxAge: 3600000, // 1 hour in milliseconds
-    });
-
     // Send success response
     res.status(200).json({
       message: "Login successful.",
-      user: { id: user._id, name: user.name, role: user.role },
+      token,
+      id: user._id,
+      name: user.name,
+      role: user.role,
     });
   } catch (error) {
     console.error("Login Error:", error);

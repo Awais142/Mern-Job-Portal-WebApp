@@ -17,7 +17,7 @@ const Register = () => {
   const [secondNiche, setSecondNiche] = useState("");
   const [thirdNiche, setThirdNiche] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
-  const [resume, setResume] = useState("");
+  const [resume, setResume] = useState(null); // Handle resume file upload
 
   const { loading, error, message, registerUser, clearErrors } = useUserStore();
   const navigateTo = useNavigate();
@@ -32,6 +32,7 @@ const Register = () => {
     firstNiche: "",
     secondNiche: "",
     thirdNiche: "",
+    general: "", // Added to capture server errors
   });
 
   // Validation logic
@@ -45,6 +46,7 @@ const Register = () => {
       firstNiche: "",
       secondNiche: "",
       thirdNiche: "",
+      general: "",
     };
 
     if (!role) errors.role = "Please select a role.";
@@ -95,10 +97,10 @@ const Register = () => {
     await registerUser(formData);
   };
 
-  // Toast and error handling
+  // Handle toast and error messages
   useEffect(() => {
     if (error) {
-      setFormErrors({ ...formErrors, general: error });
+      setFormErrors((prev) => ({ ...prev, general: error }));
       clearErrors();
     }
 
@@ -121,7 +123,7 @@ const Register = () => {
               value={role}
               onChange={(e) => {
                 setRole(e.target.value);
-                setFormErrors({ ...formErrors, role: "" }); // Clear error on change
+                setFormErrors({ ...formErrors, role: "" });
               }}
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
             >
@@ -144,7 +146,7 @@ const Register = () => {
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
-                  setFormErrors({ ...formErrors, name: "" }); // Clear error on change
+                  setFormErrors({ ...formErrors, name: "" });
                 }}
                 className="w-full p-3 rounded-lg focus:outline-none"
               />
@@ -164,7 +166,7 @@ const Register = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setFormErrors({ ...formErrors, email: "" }); // Clear error on change
+                  setFormErrors({ ...formErrors, email: "" });
                 }}
                 className="w-full p-3 rounded-lg focus:outline-none"
               />
@@ -183,7 +185,7 @@ const Register = () => {
                 value={phone}
                 onChange={(e) => {
                   setPhone(e.target.value);
-                  setFormErrors({ ...formErrors, phone: "" }); // Clear error on change
+                  setFormErrors({ ...formErrors, phone: "" });
                 }}
                 className="w-full p-3 rounded-lg focus:outline-none"
               />
@@ -201,17 +203,11 @@ const Register = () => {
                 type="text"
                 placeholder="Your Address"
                 value={address}
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                  setFormErrors({ ...formErrors, address: "" }); // Clear error on change
-                }}
+                onChange={(e) => setAddress(e.target.value)}
                 className="w-full p-3 rounded-lg focus:outline-none"
               />
               <FaAddressBook className="mr-2 text-gray-500" />
             </div>
-            {formErrors.address && (
-              <p className="text-red-600">{formErrors.address}</p>
-            )}
           </div>
 
           <div className="mb-4">
@@ -223,7 +219,7 @@ const Register = () => {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setFormErrors({ ...formErrors, password: "" }); // Clear error on change
+                  setFormErrors({ ...formErrors, password: "" });
                 }}
                 className="w-full p-3 rounded-lg focus:outline-none"
               />
@@ -234,22 +230,22 @@ const Register = () => {
             )}
           </div>
 
-          {/* Job Seeker Fields */}
+          {/* Conditional Fields for Job Seekers */}
           {role === "Job Seeker" && (
             <>
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Niche 1</label>
+                <label className="block text-gray-700 mb-2">First Niche</label>
                 <select
                   value={firstNiche}
                   onChange={(e) => {
                     setFirstNiche(e.target.value);
-                    setFormErrors({ ...formErrors, firstNiche: "" }); // Clear error on change
+                    setFormErrors({ ...formErrors, firstNiche: "" });
                   }}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
                 >
-                  <option value="">Select Niche</option>
-                  {nichesArray.map((niche, index) => (
-                    <option key={index} value={niche}>
+                  <option value="">Select First Niche</option>
+                  {nichesArray.map((niche) => (
+                    <option key={niche} value={niche}>
                       {niche}
                     </option>
                   ))}
@@ -260,18 +256,18 @@ const Register = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Niche 2</label>
+                <label className="block text-gray-700 mb-2">Second Niche</label>
                 <select
                   value={secondNiche}
                   onChange={(e) => {
                     setSecondNiche(e.target.value);
-                    setFormErrors({ ...formErrors, secondNiche: "" }); // Clear error on change
+                    setFormErrors({ ...formErrors, secondNiche: "" });
                   }}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
                 >
-                  <option value="">Select Niche</option>
-                  {nichesArray.map((niche, index) => (
-                    <option key={index} value={niche}>
+                  <option value="">Select Second Niche</option>
+                  {nichesArray.map((niche) => (
+                    <option key={niche} value={niche}>
                       {niche}
                     </option>
                   ))}
@@ -282,18 +278,18 @@ const Register = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Niche 3</label>
+                <label className="block text-gray-700 mb-2">Third Niche</label>
                 <select
                   value={thirdNiche}
                   onChange={(e) => {
                     setThirdNiche(e.target.value);
-                    setFormErrors({ ...formErrors, thirdNiche: "" }); // Clear error on change
+                    setFormErrors({ ...formErrors, thirdNiche: "" });
                   }}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
                 >
-                  <option value="">Select Niche</option>
-                  {nichesArray.map((niche, index) => (
-                    <option key={index} value={niche}>
+                  <option value="">Select Third Niche</option>
+                  {nichesArray.map((niche) => (
+                    <option key={niche} value={niche}>
                       {niche}
                     </option>
                   ))}
@@ -304,41 +300,51 @@ const Register = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Cover Letter</label>
+                <label className="block text-gray-700 mb-2">
+                  Cover Letter (optional)
+                </label>
                 <textarea
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
-                  placeholder="Your Cover Letter"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  placeholder="Write your cover letter..."
                 ></textarea>
               </div>
 
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Resume</label>
+                <label className="block text-gray-700 mb-2">
+                  Resume (optional)
+                </label>
                 <input
                   type="file"
                   onChange={resumeHandler}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
                 />
               </div>
             </>
           )}
 
+          {/* General error message */}
+          {formErrors.general && (
+            <p className="text-red-600">{formErrors.general}</p>
+          )}
+
+          {/* Submit button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-500 transition duration-300"
+            className="w-full p-3 bg-teal-600 text-white rounded-lg font-bold hover:bg-teal-700 transition duration-300"
           >
-            {loading ? "Loading..." : "Register"}
+            {loading ? "Registering..." : "Register"}
           </button>
-        </form>
 
-        <p className="mt-4 text-center text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-teal-600 hover:underline">
-            Login
-          </Link>
-        </p>
+          <p className="text-center mt-4 text-gray-600">
+            Already have an account?{" "}
+            <Link to="/login" className="text-teal-600 hover:underline">
+              Login
+            </Link>
+          </p>
+        </form>
       </div>
     </section>
   );

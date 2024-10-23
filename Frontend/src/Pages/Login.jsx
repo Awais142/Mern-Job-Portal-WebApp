@@ -1,143 +1,153 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaRegUser, FaLock } from "react-icons/fa";
-import useUserStore from "../Store/userStore"; // Adjust the path as needed
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const Login = () => {
-  const [role, setRole] = useState("");
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessages, setErrorMessages] = useState({
-    role: "",
-    email: "",
-    password: "",
-  });
+  const [role, setRole] = useState("");
+  const [error, setError] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
-  const { loading, error, message, loginUser, clearErrors } = useUserStore();
-  const navigateTo = useNavigate();
-
-  const handleLogin = async (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessages({ role: "", email: "", password: "" }); // Clear previous errors
 
-    // Basic validation
-    let isValid = true;
-    if (!role) {
-      setErrorMessages((prev) => ({ ...prev, role: "Please select a role." }));
-      isValid = false;
-    }
-    if (!email) {
-      setErrorMessages((prev) => ({ ...prev, email: "Email is required." }));
-      isValid = false;
-    }
-    if (!password) {
-      setErrorMessages((prev) => ({
-        ...prev,
-        password: "Password is required.",
-      }));
-      isValid = false;
-    }
+    try {
+      // Reset error and success messages
+      setError({});
+      setSuccessMessage("");
 
-    if (isValid) {
-      const userData = { role, email, password };
-      await loginUser(userData);
+      // Make the API call to login
+      const response = await axios.post(
+        "http://127.0.0.1:5000/api/user/login",
+        {
+          email,
+          password,
+          role,
+        }
+      );
+
+      // Log the response data to check the structure
+      console.log("Response data:", response.data);
+
+      // Extract token and user data from the response
+      const { token, user, message } = response.data; // Adjusted to match your response structure
+
+      // Ensure the token exists
+      if (!token) {
+        throw new Error("Token not found in response.");
+      }
+
+      // Store the token in local storage
+      localStorage.setItem("token", token);
+      console.log("Stored token:", token);
+
+      // Display success toast
+      setSuccessMessage(message); // Using the message from response
+
+      // Delay navigation for 2 seconds to show the success message
+      setTimeout(() => {
+        // Navigate based on user role
+        navigate(
+          user.role === "Employer"
+            ? "/employer-dashboard"
+            : "/job-seeker-dashboard"
+        );
+      }, 2000);
+    } catch (err) {
+      // Handle any errors during the login process and set specific error messages
+      const errorResponse =
+        err.response && err.response.data && err.response.data.message
+          ? err.response.data.message
+          : "Login failed. Please check your credentials.";
+
+      // Set specific error messages based on response
+      if (errorResponse.includes("email")) {
+        setError({ email: errorResponse });
+      } else if (errorResponse.includes("password")) {
+        setError({ password: errorResponse });
+      } else {
+        setError({ general: errorResponse });
+      }
     }
   };
 
-  // Error handling
-  useEffect(() => {
-    if (error) {
-      setErrorMessages({ ...errorMessages, email: error }); // Show server error on email field
-      clearErrors();
-    }
-
-    if (message) {
-      navigateTo("/dashboard"); // Redirect after successful login
-      console.log(message);
-    }
-  }, [error, message, navigateTo, clearErrors]);
-
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gray-100 pb-8 mt-4 pt-20">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Login to Your Account
-        </h3>
-        <form onSubmit={handleLogin}>
-          {/* Role selection */}
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-96">
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+
+        {/* Display general error message */}
+        {error.general && (
+          <p className="text-red-500 mb-4 text-center">{error.general}</p>
+        )}
+
+        {/* Success toast */}
+        {successMessage && (
+          <div className="mb-4 bg-green-100 text-green-800 text-center p-2 rounded">
+            {successMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Login As</label>
+            <label className="block text-gray-700">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={`w-full px-3 py-2 border rounded ${
+                error.email ? "border-red-500" : ""
+              }`}
+              required
+            />
+            {/* Display email field error */}
+            {error.email && <p className="text-red-500">{error.email}</p>}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`w-full px-3 py-2 border rounded ${
+                error.password ? "border-red-500" : ""
+              }`}
+              required
+            />
+            {/* Display password field error */}
+            {error.password && <p className="text-red-500">{error.password}</p>}
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700">Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
+              className="w-full px-3 py-2 border rounded"
+              required
             >
               <option value="">Select Role</option>
-              <option value="Employer">Employer</option>
               <option value="Job Seeker">Job Seeker</option>
+              <option value="Employer">Employer</option>
             </select>
-            {errorMessages.role && (
-              <p className="text-red-500 text-sm mt-1">{errorMessages.role}</p>
-            )}
+            {/* Display role field error if necessary */}
+            {error.role && <p className="text-red-500">{error.role}</p>}
           </div>
 
-          {/* Email Field */}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Email Address</label>
-            <div className="flex items-center border border-gray-300 rounded-lg shadow-sm">
-              <input
-                type="email"
-                placeholder="youremail@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-3 rounded-lg focus:outline-none"
-              />
-              <FaRegUser className="mr-2 text-gray-500" />
-            </div>
-            {errorMessages.email && (
-              <p className="text-red-500 text-sm mt-1">{errorMessages.email}</p>
-            )}
-          </div>
-
-          {/* Password Field */}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Password</label>
-            <div className="flex items-center border border-gray-300 rounded-lg shadow-sm">
-              <input
-                type="password"
-                placeholder="Your Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 rounded-lg focus:outline-none"
-              />
-              <FaLock className="mr-2 text-gray-500" />
-            </div>
-            {errorMessages.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errorMessages.password}
-              </p>
-            )}
-          </div>
-
-          {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition duration-300"
+            className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700"
           >
-            {loading ? "Loading..." : "Login"}
+            Login
           </button>
         </form>
-
-        <p className="mt-4 text-center">
-          Not signed up yet?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Sign Up
-          </Link>
-        </p>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default Login;
+export default LoginForm;

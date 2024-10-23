@@ -23,11 +23,11 @@ export const registerUserApi = async (formData) => {
 };
 
 // Login User API
-export const loginUserApi = async (credentials) => {
+export const loginUser = async (email, password, role) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL}/api/user/login`,
-      credentials,
+      { email, password, role },
       {
         headers: {
           "Content-Type": "application/json",
