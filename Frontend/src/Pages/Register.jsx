@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaAddressBook, FaPencilAlt, FaRegUser } from "react-icons/fa";
 import { FaPhoneFlip } from "react-icons/fa6";
 import { RiLock2Fill } from "react-icons/ri";
-import useUserStore from "../Store/userStore"; // Adjust the path as needed
 import { nichesArray } from "../Data/jobsData";
 
 const Register = () => {
@@ -19,7 +18,6 @@ const Register = () => {
   const [coverLetter, setCoverLetter] = useState("");
   const [resume, setResume] = useState(null); // Handle resume file upload
 
-  const { loading, error, message, registerUser, clearErrors } = useUserStore();
   const navigateTo = useNavigate();
 
   // State for error messages

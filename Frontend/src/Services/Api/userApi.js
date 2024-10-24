@@ -23,20 +23,12 @@ export const registerUserApi = async (formData) => {
 };
 
 // Login User API
-export const loginUser = async (email, password, role) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/user/login`,
-      { email, password, role },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data; // Assuming the API sends back the user data or a success message
-  } catch (error) {
-    console.error("Error logging in:", error);
-    throw new Error(error.response.data.message || "Failed to log in"); // Use the error message from the server if available
-  }
+export const loginUserApi = async (email, password, role) => {
+  const response = await axios.post(`${API_BASE_URL}/api/user/login`, {
+    email,
+    password,
+    role,
+  });
+
+  return response.data; // Return the response data directly
 };

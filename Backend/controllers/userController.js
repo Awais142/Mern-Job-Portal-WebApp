@@ -114,7 +114,6 @@ export const login = async (req, res) => {
     if (!email || !password || !role) {
       return res.status(400).json({ message: "All fields are required." });
     }
-
     // Find the user by email only
     const user = await User.findOne({ email });
     if (!user) {
