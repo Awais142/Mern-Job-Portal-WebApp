@@ -19,25 +19,38 @@ export const register = async (req, res) => {
       coverLetter,
     } = req.body;
 
-    // Check if required fields are missing
-    if (!name || !email || !phone || !address || !password || !role) {
-      return res.status(400).json({ message: "All fields are required." });
+    // Initialize an object to store field-specific errors
+    const errors = {};
+
+    // Field validation: Check if required fields are missing and add to errors
+    if (!name) errors.name = "Name is required.";
+    if (!email) errors.email = "Email is required.";
+    if (!phone) errors.phone = "Phone number is required.";
+    if (!address) errors.address = "Address is required.";
+    if (!password) errors.password = "Password is required.";
+    if (!role) errors.role = "Role is required.";
+
+    // Check for niches if the role is 'Job Seeker'
+    if (role === "Job Seeker") {
+      if (!firstNiche) errors.firstNiche = "First niche is required.";
+      if (!secondNiche) errors.secondNiche = "Second niche is required.";
+      if (!thirdNiche) errors.thirdNiche = "Third niche is required.";
     }
 
-    // If the role is 'Job Seeker', check if niches are provided
-    if (role === "Job Seeker" && (!firstNiche || !secondNiche || !thirdNiche)) {
-      return res
-        .status(400)
-        .json({ message: "Please provide your preferred job niches." });
+    // Return field-specific errors if any are present
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
     }
 
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Email is already registered." });
+      return res
+        .status(400)
+        .json({ errors: { email: "Email is already registered." } });
     }
 
-    // Prepare user data
+    // Prepare user data for creation
     const userData = {
       name,
       email,
@@ -45,11 +58,8 @@ export const register = async (req, res) => {
       address,
       password,
       role,
-      niches: {
-        firstNiche,
-        secondNiche,
-        thirdNiche,
-      },
+      niches:
+        role === "Job Seeker" ? { firstNiche, secondNiche, thirdNiche } : null,
       coverLetter,
     };
 
@@ -63,26 +73,30 @@ export const register = async (req, res) => {
             resume.tempFilePath,
             {
               folder: "Job_Seekers_Resume",
-              resource_type: "raw", // Ensures it's treated as a file (not an image)
+              resource_type: "raw", // Treat it as a file (not an image)
               use_filename: true, // Use the original file name
-              unique_filename: false, // Keep the file name unique in the folder
-              access_mode: "public", // Ensure public access to the file
+              unique_filename: false, // Keep the file name unique
+              access_mode: "public", // Public access to the file
             }
           );
 
           if (!cloudinaryResponse || cloudinaryResponse.error) {
             return res
               .status(500)
-              .json({ message: "Failed to upload resume to cloud." });
+              .json({
+                errors: { resume: "Failed to upload resume to cloud." },
+              });
           }
 
-          // Add resume info to userData
+          // Add resume information to userData
           userData.resume = {
             public_id: cloudinaryResponse.public_id,
             url: cloudinaryResponse.secure_url,
           };
         } catch (error) {
-          return res.status(500).json({ message: "Failed to upload resume." });
+          return res
+            .status(500)
+            .json({ errors: { resume: "Failed to upload resume." } });
         }
       }
     }
@@ -99,7 +113,7 @@ export const register = async (req, res) => {
       user: userResponse,
     });
   } catch (error) {
-    // Handle any errors that occur during the process
+    // Return a general error message if something went wrong
     return res.status(500).json({ message: "An error occurred.", error });
   }
 };
