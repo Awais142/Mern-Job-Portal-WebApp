@@ -107,28 +107,34 @@ export const register = async (req, res) => {
 // Login function
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
-  // console.log("From User Controller", email, password, role);
 
   try {
     // Validate if all fields are provided
     if (!email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required." });
+      return res
+        .status(400)
+        .json({ errors: { general: "All fields are required." } });
     }
+
     // Find the user by email only
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(404).json({ errors: { email: "User not found." } });
     }
 
-    // Check if the role matches
+    // Check if the role matches the user's role
     if (user.role !== role) {
-      return res.status(403).json({ message: "Authentication failed" });
+      return res
+        .status(403)
+        .json({ errors: { role: "Authentication failed" } });
     }
 
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password." });
+      return res
+        .status(401)
+        .json({ errors: { password: "Invalid email or password." } });
     }
 
     // Generate a JWT token
@@ -139,8 +145,9 @@ export const login = async (req, res) => {
         expiresIn: "1h", // Token expires in 1 hour
       }
     );
+
     // Send success response
-    res.status(200).json({
+    return res.status(200).json({
       message: "Login successful.",
       token,
       user: {
@@ -151,7 +158,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.error("Login Error:", error);
-    res.status(500).json({ message: "Error logging in.", error });
+    return res.status(500).json({ message: "Internal server error.", error });
   }
 };
 
