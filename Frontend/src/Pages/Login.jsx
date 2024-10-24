@@ -10,9 +10,10 @@ const LoginForm = () => {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  // Access the login function and error from the Zustand store
+  // Access the login function, error, and fieldErrors from the Zustand store
   const login = useLoginStore((state) => state.login);
   const error = useLoginStore((state) => state.error);
+  const fieldErrors = useLoginStore((state) => state.fieldErrors); // New field-specific errors
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -26,7 +27,6 @@ const LoginForm = () => {
 
       // Delay navigation for 2 seconds
       setTimeout(() => {
-        // Navigate based on user role (access from Zustand)
         const userRole = useLoginStore.getState().role;
         if (userRole === "Employer") {
           navigate("/login"); // Adjust the path as needed
@@ -34,10 +34,9 @@ const LoginForm = () => {
           navigate("/"); // Adjust the path as needed
         }
       }, 2000); // 2-second delay before navigation
-    } else {
-      // Show error toast if login fails
-      toast.error(error || "An error occurred during login.");
-      console.log("An error occurred during login", error);
+    } else if (error) {
+      // Show a general error toast if no field-specific errors are present
+      toast.error(error);
     }
   };
 
@@ -46,9 +45,6 @@ const LoginForm = () => {
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
 
-        {/* Display general error message */}
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
@@ -56,11 +52,15 @@ const LoginForm = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className={`w-full px-3 py-2 border rounded ${
+                fieldErrors.email ? "border-red-500" : ""
+              }`}
               required
             />
             {/* Display error related to email if present */}
-            {error && <p className="text-red-500 mt-1">{error}</p>}
+            {fieldErrors.email && (
+              <p className="text-red-500 mt-1">{fieldErrors.email}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -69,9 +69,15 @@ const LoginForm = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className={`w-full px-3 py-2 border rounded ${
+                fieldErrors.password ? "border-red-500" : ""
+              }`}
               required
             />
+            {/* Display error related to password if present */}
+            {fieldErrors.password && (
+              <p className="text-red-500 mt-1">{fieldErrors.password}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -79,13 +85,19 @@ const LoginForm = () => {
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
+              className={`w-full px-3 py-2 border rounded ${
+                fieldErrors.role ? "border-red-500" : ""
+              }`}
               required
             >
               <option value="">Select Role</option>
               <option value="Job Seeker">Job Seeker</option>
               <option value="Employer">Employer</option>
             </select>
+            {/* Display error related to role if present */}
+            {fieldErrors.role && (
+              <p className="text-red-500 mt-1">{fieldErrors.role}</p>
+            )}
           </div>
 
           <button

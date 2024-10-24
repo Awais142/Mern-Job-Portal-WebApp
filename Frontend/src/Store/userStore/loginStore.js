@@ -6,6 +6,7 @@ const useLoginStore = create((set) => ({
   token: null,
   role: "guest",
   error: null,
+  fieldErrors: {}, // Store field-specific errors
 
   // Login function
   login: async (email, password, role) => {
@@ -13,11 +14,7 @@ const useLoginStore = create((set) => ({
       // Make the login request using axios
       const response = await axios.post(
         "http://127.0.0.1:5000/api/user/login",
-        {
-          email,
-          password,
-          role,
-        }
+        { email, password, role }
       );
 
       // If login is successful, set the role and user data in the Zustand store
@@ -28,6 +25,7 @@ const useLoginStore = create((set) => ({
           user: data.user,
           token: data.token,
           error: null,
+          fieldErrors: {}, // Clear any previous field-specific errors
         });
 
         // Save token to localStorage
@@ -39,15 +37,19 @@ const useLoginStore = create((set) => ({
         return false; // Return failure
       }
     } catch (error) {
-      // Handle error (like network issues or server errors)
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        set({ error: error.response.data.message });
+      // Handle errors (like network issues or server errors)
+      if (error.response && error.response.data) {
+        // Check for field-specific errors
+        if (error.response.data.errors) {
+          set({ fieldErrors: error.response.data.errors });
+        } else {
+          set({ error: error.response.data.message, fieldErrors: {} });
+        }
       } else {
-        set({ error: "An unknown error occurred during login." });
+        set({
+          error: "An unknown error occurred during login.",
+          fieldErrors: {},
+        });
       }
       return false; // Return failure
     }
@@ -55,7 +57,13 @@ const useLoginStore = create((set) => ({
 
   // Logout function
   logout: () => {
-    set({ user: null, token: null, role: "guest", error: null });
+    set({
+      user: null,
+      token: null,
+      role: "guest",
+      error: null,
+      fieldErrors: {},
+    });
 
     // Remove token from localStorage
     localStorage.removeItem("token");
