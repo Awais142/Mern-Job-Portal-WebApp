@@ -20,7 +20,6 @@ const LoginForm = () => {
 
     // Trigger the Zustand login function
     const success = await login(email, password, role);
-    console.log("Login component", success);
     if (success) {
       // Show success toast
       toast.success("Login successful!");
@@ -30,11 +29,15 @@ const LoginForm = () => {
         // Navigate based on user role (access from Zustand)
         const userRole = useLoginStore.getState().role;
         if (userRole === "Employer") {
-          navigate("/"); // Adjust the path as needed
+          navigate("/login"); // Adjust the path as needed
         } else {
           navigate("/"); // Adjust the path as needed
         }
       }, 2000); // 2-second delay before navigation
+    } else {
+      // Show error toast if login fails
+      toast.error(error || "An error occurred during login.");
+      console.log("An error occurred during login", error);
     }
   };
 
@@ -56,6 +59,8 @@ const LoginForm = () => {
               className="w-full px-3 py-2 border rounded"
               required
             />
+            {/* Display error related to email if present */}
+            {error && <p className="text-red-500 mt-1">{error}</p>}
           </div>
 
           <div className="mb-4">

@@ -23,7 +23,12 @@ const useLoginStore = create((set) => ({
       // If login is successful, set the role and user data in the Zustand store
       if (response.status === 200) {
         const data = response.data;
-        set({ role: data.user.role, user: data.user, token: data.token });
+        set({
+          role: data.user.role,
+          user: data.user,
+          token: data.token,
+          error: null,
+        });
 
         // Save token to localStorage
         localStorage.setItem("token", data.token);
@@ -35,7 +40,15 @@ const useLoginStore = create((set) => ({
       }
     } catch (error) {
       // Handle error (like network issues or server errors)
-      set({ error: "An error occurred during login." });
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        set({ error: error.response.data.message });
+      } else {
+        set({ error: "An unknown error occurred during login." });
+      }
       return false; // Return failure
     }
   },
