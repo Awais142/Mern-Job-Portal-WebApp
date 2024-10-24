@@ -81,11 +81,9 @@ export const register = async (req, res) => {
           );
 
           if (!cloudinaryResponse || cloudinaryResponse.error) {
-            return res
-              .status(500)
-              .json({
-                errors: { resume: "Failed to upload resume to cloud." },
-              });
+            return res.status(500).json({
+              errors: { resume: "Failed to upload resume to cloud." },
+            });
           }
 
           // Add resume information to userData
@@ -148,7 +146,7 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res
         .status(401)
-        .json({ errors: { password: "Invalid email or password." } });
+        .json({ errors: { password: "Invalid password." } });
     }
 
     // Generate a JWT token
