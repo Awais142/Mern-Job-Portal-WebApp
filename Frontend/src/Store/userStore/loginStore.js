@@ -7,6 +7,7 @@ const useLoginStore = create((set) => ({
   role: "guest",
   error: null,
   fieldErrors: {}, // Store field-specific errors
+  isAuthenticated: false,
 
   // Login function
   login: async (email, password, role) => {
@@ -26,6 +27,7 @@ const useLoginStore = create((set) => ({
           token: data.token,
           error: null,
           fieldErrors: {}, // Clear any previous field-specific errors
+          isAuthenticated: true,
         });
 
         // Save token to localStorage
