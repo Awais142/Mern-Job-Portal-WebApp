@@ -29,11 +29,11 @@ const LoginForm = () => {
       setTimeout(() => {
         const userRole = useLoginStore.getState().role;
         if (userRole === "Employer") {
-          navigate("/login"); // Adjust the path as needed
+          navigate("/"); // Adjust the path as needed
         } else {
           navigate("/"); // Adjust the path as needed
         }
-      }, 2000); // 2-second delay before navigation
+      }, 1000); // 2-second delay before navigation
     } else if (error) {
       // Show a general error toast if no field-specific errors are present
       toast.error(error);
