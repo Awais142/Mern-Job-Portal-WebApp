@@ -6,19 +6,16 @@ const useLoginStore = create((set) => ({
   token: null,
   role: "guest",
   error: null,
-  fieldErrors: {}, // Store field-specific errors
+  fieldErrors: {},
   isAuthenticated: false,
 
-  // Login function
   login: async (email, password, role) => {
     try {
-      // Make the login request using axios
       const response = await axios.post(
         "http://127.0.0.1:5000/api/user/login",
         { email, password, role }
       );
 
-      // If login is successful, set the role and user data in the Zustand store
       if (response.status === 200) {
         const data = response.data;
         set({
@@ -26,22 +23,18 @@ const useLoginStore = create((set) => ({
           user: data.user,
           token: data.token,
           error: null,
-          fieldErrors: {}, // Clear any previous field-specific errors
+          fieldErrors: {},
           isAuthenticated: true,
         });
 
-        // Save token to localStorage
         localStorage.setItem("token", data.token);
-
-        return true; // Return success
+        return true;
       } else {
         set({ error: "Login failed, please check your credentials." });
-        return false; // Return failure
+        return false;
       }
     } catch (error) {
-      // Handle errors (like network issues or server errors)
       if (error.response && error.response.data) {
-        // Check for field-specific errors
         if (error.response.data.errors) {
           set({ fieldErrors: error.response.data.errors });
         } else {
@@ -53,11 +46,10 @@ const useLoginStore = create((set) => ({
           fieldErrors: {},
         });
       }
-      return false; // Return failure
+      return false;
     }
   },
 
-  // Logout function
   logout: () => {
     set({
       user: null,
@@ -65,10 +57,18 @@ const useLoginStore = create((set) => ({
       role: "guest",
       error: null,
       fieldErrors: {},
+      isAuthenticated: false,
     });
-
-    // Remove token from localStorage
     localStorage.removeItem("token");
+  },
+
+  // New method to check authentication on load
+  checkAuth: () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      set({ token, isAuthenticated: true });
+      // Fetch user data if needed and set it in the state
+    }
   },
 }));
 

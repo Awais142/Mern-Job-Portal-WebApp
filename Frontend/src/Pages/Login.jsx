@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useLoginStore from "../Store/userStore/loginStore"; // Import the Zustand store
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const LoginForm = () => {
     const success = await login(email, password, role);
     if (success) {
       // Show success toast
-      toast.success("Login successful!");
+      toast.success("Login successful Redirecting !");
 
       // Delay navigation for 2 seconds
       setTimeout(() => {
@@ -106,6 +107,16 @@ const LoginForm = () => {
           >
             Login
           </button>
+          {/* Login Link */}
+          <p className="text-center text-gray-600 mt-4">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-gray-500 hover:underline font-bold"
+            >
+              Register
+            </Link>
+          </p>
         </form>
       </div>
 
