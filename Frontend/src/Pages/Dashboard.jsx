@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import {
   FaUser,
   FaEdit,
@@ -9,12 +9,15 @@ import {
   FaClipboardList,
 } from "react-icons/fa";
 import useLoginStore from "../Store/userStore/loginStore";
+import MyJobs from "../Components/MyJobs";
 
 const Dashboard = () => {
-  const { user, role, logout, isAuthenticated } = useLoginStore(); // Use context/store for auth
-  const [selectedSection, setSelectedSection] = useState("profile"); // Track active section
+  const { user, role, logout, isAuthenticated } = useLoginStore();
+  const [selectedSection, setSelectedSection] = useState("profile");
+  const location = useLocation();
 
-  if (!isAuthenticated) {
+  // Only redirect if the user is explicitly unauthenticated
+  if (!isAuthenticated && location.pathname !== "/login") {
     return <Navigate to="/login" />;
   }
 
@@ -39,28 +42,6 @@ const Dashboard = () => {
   ];
 
   const renderLinks = role === "Employer" ? employerLinks : jobSeekerLinks;
-
-  // Placeholder content for each section
-  const renderContent = () => {
-    switch (selectedSection) {
-      case "profile":
-        return <p>Welcome to your profile page, {user?.name}!</p>;
-      case "update-profile":
-        return <p>Here you can update your profile information.</p>;
-      case "update-password":
-        return <p>Update your password here.</p>;
-      case "post-job":
-        return <p>Post a new job listing here.</p>;
-      case "my-jobs":
-        return <p>Manage your job listings here.</p>;
-      case "applications":
-        return <p>View applications for your posted jobs here.</p>;
-      case "my-applications":
-        return <p>View your job applications here.</p>;
-      default:
-        return <p>Select an option from the sidebar.</p>;
-    }
-  };
 
   return (
     <div className="flex min-h-screen bg-gray-100 mt-12">
@@ -92,11 +73,25 @@ const Dashboard = () => {
         </nav>
       </aside>
 
-      {/* Main Content (50% width) */}
+      {/* Main Content (75% width) */}
       <main className="flex-grow bg-white p-6">
         <div className="text-gray-700 p-6 border border-gray-200 rounded-lg shadow-lg">
-          {/* Render content based on selected section */}
-          {renderContent()}
+          {/* Conditionally render placeholders for each section */}
+          {selectedSection === "profile" && <div>Profile Section</div>}
+          {selectedSection === "update-profile" && (
+            <div>Update Profile Section</div>
+          )}
+          {selectedSection === "update-password" && (
+            <div>Update Password Section</div>
+          )}
+          {selectedSection === "post-job" && <div>Post Job Section</div>}
+          {selectedSection === "my-jobs" && <MyJobs />}
+          {selectedSection === "applications" && (
+            <div>Applications Section</div>
+          )}
+          {selectedSection === "my-applications" && (
+            <div>My Applications Section</div>
+          )}
         </div>
       </main>
     </div>

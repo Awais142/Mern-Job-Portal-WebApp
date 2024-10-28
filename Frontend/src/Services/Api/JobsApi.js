@@ -33,3 +33,17 @@ export const createJobPostApi = async (jobData) => {
     throw error; // Re-throw the error to handle it later in the UI or store
   }
 };
+export const getMyJobs = async () => {
+  try {
+    const token = localStorage.getItem("token"); // Retrieve the token
+    const response = await axios.get(`${API_BASE_URL}/api/jobs/getmyjobs`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach the token in the headers
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error Getting Jobs:", error);
+    throw error;
+  }
+};

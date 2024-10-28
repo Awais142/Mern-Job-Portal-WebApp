@@ -62,12 +62,35 @@ const useLoginStore = create((set) => ({
     localStorage.removeItem("token");
   },
 
-  // New method to check authentication on load
-  checkAuth: () => {
+  checkAuth: async () => {
     const token = localStorage.getItem("token");
     if (token) {
-      set({ token, isAuthenticated: true });
-      // Fetch user data if needed and set it in the state
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:5000/api/user/getuser",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (response.status === 200) {
+          const userData = response.data.user;
+          set({
+            token,
+            user: userData,
+            role: userData.role,
+            isAuthenticated: true,
+          });
+        }
+      } catch (error) {
+        set({
+          token: null,
+          user: null,
+          role: "guest",
+          isAuthenticated: false,
+        });
+        localStorage.removeItem("token");
+      }
     }
   },
 }));

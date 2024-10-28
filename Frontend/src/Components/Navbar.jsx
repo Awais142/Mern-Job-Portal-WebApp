@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaUser } from "react-icons/fa";
-import useLoginStore from "../Store/userStore/loginStore"; // Adjust the path as needed
+import useLoginStore from "../Store/userStore/loginStore";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, isAuthenticated, logout, checkAuth } = useLoginStore();
 
+  // Run checkAuth on component mount
   useEffect(() => {
-    checkAuth(); // Check authentication status on component mount
+    checkAuth();
   }, [checkAuth]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const closeDropdown = (e) => {
+      if (!e.target.closest("#dropdownBtn")) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", closeDropdown);
+    return () => document.removeEventListener("click", closeDropdown);
+  }, []);
 
   return (
     <nav className="bg-gray-100 w-full p-4 fixed top-0 left-0 z-50">
       <div className="flex justify-between items-center max-w-7xl mx-auto poppins-semibold">
+        {/* Logo */}
         <div className="text-2xl font-bold text-gray-800">MyLogo</div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <FaBars className="text-gray-800 text-2xl" />
-          </button>
-        </div>
 
         {/* Desktop Links */}
         <ul className="hidden md:flex space-x-8 text-gray-700">
+          {/* Links Array */}
           {[
             { name: "Home", path: "/" },
             { name: "Jobs", path: "/jobs" },
@@ -40,11 +47,12 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Auth Links */}
+        {/* Auth and Dropdown Links */}
         <div className="hidden md:flex items-center space-x-4">
           {isAuthenticated ? (
             <div className="relative">
               <button
+                id="dropdownBtn"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="text-gray-800 hover:text-gray-900 transition-all duration-300"
               >
@@ -53,7 +61,10 @@ const Navbar = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
                   <span className="block px-4 py-2 text-gray-700">
-                    Welcome, {user?.name || "User"}
+                    Welcome, {user?.name || "No Username"}
+                  </span>
+                  <span className="block px-4 py-2 text-gray-700">
+                    Your are an ({user?.role || "User"})
                   </span>
                   <Link
                     to="/dashboard"
@@ -91,9 +102,17 @@ const Navbar = () => {
           )}
         </div>
 
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <FaBars className="text-gray-800 text-2xl" />
+          </button>
+        </div>
+
         {/* Mobile Menu */}
         {isMenuOpen && (
           <ul className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg p-4 space-y-4 text-gray-800">
+            {/* Links Array */}
             {[
               { name: "Home", path: "/" },
               { name: "Jobs", path: "/jobs" },

@@ -4,6 +4,7 @@ import {
   getJobByIdApi,
   createJobPostApi,
 } from "../Services/Api/JobsApi"; // Added createJobPost
+import { getMyJobs } from "../Services/Api/JobsApi";
 
 const useJobStore = create((set) => ({
   jobs: [],
@@ -51,6 +52,22 @@ const useJobStore = create((set) => ({
       set((state) => ({ jobs: [...state.jobs, data.job], loading: false })); // Add the new job to the list
     } catch (error) {
       set({ error: error.message, loading: false }); // Handle error
+    }
+  },
+  fetchMyJobs: async () => {
+    set({ loading: true, error: null });
+
+    try {
+      const data = await getMyJobs(); // No need to pass jobData if not required
+      if (data && data.status === 200) {
+        // Update the state only if data exists and status is 200
+        set({ jobs: data.myJobs, loading: false });
+      } else {
+        throw new Error("Failed to load jobs");
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error); // Log any error for easier debugging
+      set({ error: error.message, loading: false });
     }
   },
 }));
