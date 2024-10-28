@@ -110,14 +110,25 @@ export const getAllJobs = async (req, res) => {
 export const getMyJobs = async (req, res) => {
   try {
     const myJobs = await Job.find({ postedBy: req.user._id });
+
+    // Check if no jobs were found
+    if (!myJobs || myJobs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No jobs found.",
+      });
+    }
+
     res.status(200).json({
       success: true,
       myJobs,
     });
+    console.log("myJobs from job controller:", myJobs);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching your jobs.", error: error.message });
+    res.status(500).json({
+      message: "Error fetching your jobs.",
+      error: error.message,
+    });
   }
 };
 
