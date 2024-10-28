@@ -16,11 +16,6 @@ const Dashboard = () => {
   const [selectedSection, setSelectedSection] = useState("profile");
   const location = useLocation();
 
-  // Only redirect if the user is explicitly unauthenticated
-  if (!isAuthenticated && location.pathname !== "/login") {
-    return <Navigate to="/login" />;
-  }
-
   const employerLinks = [
     { id: "profile", label: "My Profile", icon: <FaUser /> },
     { id: "update-profile", label: "Update Profile", icon: <FaEdit /> },
