@@ -29,7 +29,7 @@ const MyJobs = () => {
   }
 
   return (
-    <div className="p-4 bg-gray-50 rounded-lg shadow-lg">
+    <div className="p-4 bg-gray-50 rounded-lg shadow-lg poppins-regular">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">My Jobs</h2>
       <div className="space-y-6">
         {jobs.map((job) => (

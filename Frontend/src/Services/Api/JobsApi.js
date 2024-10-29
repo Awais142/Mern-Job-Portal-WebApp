@@ -41,6 +41,7 @@ export const getMyJobs = async () => {
         Authorization: `Bearer ${token}`, // Attach the token in the headers
       },
     });
+    // Return only the data object, not the whole response
     return response.data;
   } catch (error) {
     console.error("Error Getting Jobs:", error);

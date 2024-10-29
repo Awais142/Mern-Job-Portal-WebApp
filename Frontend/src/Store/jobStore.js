@@ -58,9 +58,9 @@ const useJobStore = create((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const data = await getMyJobs(); // No need to pass jobData if not required
-      if (data && data.status === 200) {
-        // Update the state only if data exists and status is 200
+      const data = await getMyJobs(); // `data` should now contain { success, myJobs } directly
+      if (data && data.success) {
+        // Check `data.success` instead of `status`
         set({ jobs: data.myJobs, loading: false });
       } else {
         throw new Error("Failed to load jobs");

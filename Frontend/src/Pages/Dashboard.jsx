@@ -41,7 +41,7 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-100 mt-12">
       {/* Sidebar (25% width) */}
-      <aside className="w-1/4 bg-gray-300 text-black poppins-regular p-6">
+      <aside className="w-1/2 bg-gray-300 text-black poppins-regular p-6">
         <h2 className="text-2xl font-semibold mb-6">Dashboard</h2>
         <nav className="space-y-4">
           {renderLinks.map((link) => (
