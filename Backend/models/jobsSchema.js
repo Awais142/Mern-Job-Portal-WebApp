@@ -37,9 +37,8 @@ const jobSchema = new mongoose.Schema({
     required: true,
   },
   hiringMultipleCandidates: {
-    type: String,
+    type: Boolean,
     default: "No",
-    enum: ["Yes", "No"],
   },
   personalWebsite: {
     title: {

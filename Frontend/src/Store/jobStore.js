@@ -2,15 +2,16 @@ import { create } from "zustand";
 import {
   getAllJobs,
   getJobByIdApi,
-  createJobPostApi,
+  getMyJobs,
+  postJob,
 } from "../Services/Api/JobsApi"; // Added createJobPost
-import { getMyJobs } from "../Services/Api/JobsApi";
 
-const useJobStore = create((set) => ({
+export const useJobStore = create((set) => ({
   jobs: [],
   job: null, // New state to store the fetched single job
   loading: false,
   error: null,
+  fieldErrors: {}, // Add field-specific errors
 
   // Fetch jobs from the API
   fetchJobs: async (city, niche, searchKeyword) => {
@@ -45,15 +46,28 @@ const useJobStore = create((set) => ({
 
   // Create a new job post
   createJobPost: async (jobData) => {
-    set({ loading: true, error: null }); // Start loading state before posting
+    set({ loading: true, error: null, fieldErrors: {} }); // Start loading, reset errors
 
     try {
-      const data = await createJobPostApi(jobData); // Call the API to create a new job post
-      set((state) => ({ jobs: [...state.jobs, data.job], loading: false })); // Add the new job to the list
+      const data = await postJob(jobData);
+      if (data && data.success) {
+        set((state) => ({
+          jobs: [...state.jobs, data.job],
+          loading: false,
+        }));
+      } else {
+        throw new Error("Failed to post job");
+      }
     } catch (error) {
-      set({ error: error.message, loading: false }); // Handle error
+      console.error("Error posting job:", error);
+      if (error.response && error.response.data.errors) {
+        set({ fieldErrors: error.response.data.errors, loading: false });
+      } else {
+        set({ error: error.message, loading: false });
+      }
     }
   },
+
   fetchMyJobs: async () => {
     set({ loading: true, error: null });
 

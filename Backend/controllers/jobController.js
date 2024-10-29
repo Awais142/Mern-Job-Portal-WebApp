@@ -17,23 +17,39 @@ export const postJob = async (req, res) => {
       personalWebsiteUrl,
       jobNiche,
     } = req.body;
+    console.log(
+      title,
+      jobType,
+      location,
+      responsibilities,
+      qualifications,
+      offers,
+      salary,
+      hiringMultipleCandidates,
+      jobNiche
+    );
 
-    if (
-      !title ||
-      !jobType ||
-      !location ||
-      !companyName ||
-      !introduction ||
-      !responsibilities ||
-      !qualifications ||
-      !salary ||
-      !jobNiche
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Please provide full job details." });
+    // Validate required fields
+    const missingFields = [];
+    if (!title) missingFields.push("title");
+    if (!jobType) missingFields.push("jobType");
+    if (!location) missingFields.push("location");
+    if (!companyName) missingFields.push("companyName");
+    if (!introduction) missingFields.push("introduction");
+    if (!responsibilities) missingFields.push("responsibilities");
+    if (!qualifications) missingFields.push("qualifications");
+    if (!salary) missingFields.push("salary");
+    if (!jobNiche) missingFields.push("jobNiche");
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: `Please provide the following fields: ${missingFields.join(
+          ", "
+        )}`,
+      });
     }
 
+    // Check for website title and URL consistency
     if (
       (personalWebsiteTitle && !personalWebsiteUrl) ||
       (!personalWebsiteTitle && personalWebsiteUrl)
@@ -43,7 +59,13 @@ export const postJob = async (req, res) => {
       });
     }
 
-    const postedBy = req.user._id;
+    // Ensure `req.user._id` is defined
+    const postedBy = req.user?._id;
+    if (!postedBy) {
+      return res.status(401).json({ message: "User not authenticated." });
+    }
+
+    // Create the job post
     const job = await Job.create({
       title,
       jobType,
@@ -69,9 +91,14 @@ export const postJob = async (req, res) => {
       job,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error posting job.", error: error.message });
+    console.error("Error in postJob:", error); // Logs detailed error in the console
+    res.status(500).json({
+      message: "Error posting job.",
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Internal server error",
+    });
   }
 };
 
@@ -123,7 +150,7 @@ export const getMyJobs = async (req, res) => {
       success: true,
       myJobs,
     });
-    console.log("myJobs from job controller:", myJobs);
+    // console.log("myJobs from job controller:", myJobs);
   } catch (error) {
     res.status(500).json({
       message: "Error fetching your jobs.",

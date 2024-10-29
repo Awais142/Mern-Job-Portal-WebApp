@@ -24,13 +24,31 @@ export const getJobByIdApi = async (id) => {
   }
 };
 
-export const createJobPostApi = async (jobData) => {
+export const postJob = async (jobData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/jobs/post`, jobData);
-    return response.data; // Assuming the API sends back a success message or the created job post
+    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+
+    if (!token) {
+      throw new Error("User not authenticated. Please log in.");
+    }
+
+    const response = await axios.post(
+      `${API_BASE_URL}/api/jobs/post`,
+      jobData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the token in headers
+        },
+      }
+    );
+
+    return response.data; // Return response data on success
   } catch (error) {
-    console.error("Error posting the job:", error);
-    throw error; // Re-throw the error to handle it later in the UI or store
+    console.error("Error Posting Job:", error);
+    if (error.response) {
+      throw new Error(error.response.data.message || "Failed to post job"); // Error from server
+    }
+    throw new Error("Network error or server is unavailable"); // General error
   }
 };
 export const getMyJobs = async () => {

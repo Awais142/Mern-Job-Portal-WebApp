@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import useLoginStore from "../Store/userStore/loginStore";
 import MyJobs from "../Components/MyJobs";
+import PostJob from "./PostJob";
 
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
@@ -81,7 +82,7 @@ const Dashboard = () => {
           {selectedSection === "update-password" && (
             <div>Update Password Section</div>
           )}
-          {selectedSection === "post-job" && <div>Post Job Section</div>}
+          {selectedSection === "post-job" && <PostJob />}
           {selectedSection === "my-jobs" && <MyJobs />}
           {selectedSection === "applications" && (
             <div>Applications Section</div>
