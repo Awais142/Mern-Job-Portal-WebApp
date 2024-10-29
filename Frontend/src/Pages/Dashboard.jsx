@@ -41,36 +41,38 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-100 mt-12">
       {/* Sidebar (25% width) */}
-      <aside className="w-1/2 bg-gray-300 text-black poppins-regular p-6">
-        <h2 className="text-2xl font-semibold mb-6">Dashboard</h2>
-        <nav className="space-y-4">
-          {renderLinks.map((link) => (
+      <div className="aside flex-grow bg-white p-6 w-1/4">
+        <aside className=" bg-white text-black poppins-regular p-6 border border-gray-200 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold mb-6">Dashboard</h2>
+          <nav className="space-y-4">
+            {renderLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => setSelectedSection(link.id)}
+                className={`flex items-center px-4 py-2 rounded w-full text-left ${
+                  selectedSection === link.id
+                    ? "bg-black text-white"
+                    : "hover:bg-black hover:text-white"
+                }`}
+              >
+                {link.icon}
+                <span className="ml-2">{link.label}</span>
+              </button>
+            ))}
             <button
-              key={link.id}
-              onClick={() => setSelectedSection(link.id)}
-              className={`flex items-center px-4 py-2 rounded w-full text-left ${
-                selectedSection === link.id
-                  ? "bg-gray-400"
-                  : "hover:bg-gray-400"
-              }`}
+              onClick={logout}
+              className="flex items-center px-4 py-2 mt-6 text-gray-900 hover:bg-gray-400 rounded w-full text-left"
             >
-              {link.icon}
-              <span className="ml-2">{link.label}</span>
+              <FaSignOutAlt />
+              <span className="ml-2">Logout</span>
             </button>
-          ))}
-          <button
-            onClick={logout}
-            className="flex items-center px-4 py-2 mt-6 text-gray-900 hover:bg-gray-400 rounded w-full text-left"
-          >
-            <FaSignOutAlt />
-            <span className="ml-2">Logout</span>
-          </button>
-        </nav>
-      </aside>
+          </nav>
+        </aside>
+      </div>
 
       {/* Main Content (75% width) */}
-      <main className="flex-grow bg-white p-6">
-        <div className="text-gray-700 p-6 border border-gray-200 rounded-lg shadow-lg">
+      <main className="flex-grow bg-white p-6 w-3/4">
+        <div className="text-gray-700 p-6 border border-gray-200 rounded-lg shadow-lg poppins-regular">
           {/* Conditionally render placeholders for each section */}
           {selectedSection === "profile" && <div>Profile Section</div>}
           {selectedSection === "update-profile" && (
