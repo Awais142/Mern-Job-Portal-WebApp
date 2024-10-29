@@ -2,16 +2,24 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaUser } from "react-icons/fa";
 import useLoginStore from "../Store/userStore/loginStore";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, isAuthenticated, logout, checkAuth } = useLoginStore();
+  const navigate = useNavigate();
 
   // Run checkAuth on component mount
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    console.log("handle logout");
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -73,7 +81,7 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                   <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
                     Logout
@@ -141,7 +149,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="block py-2 px-4 bg-gray-100 rounded-md"
                   >
                     Logout

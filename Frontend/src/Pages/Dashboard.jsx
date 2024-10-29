@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaUser,
   FaEdit,
@@ -15,7 +15,19 @@ import PostJob from "./PostJob";
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
   const [selectedSection, setSelectedSection] = useState("profile");
-  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    console.log("handle logout");
+  };
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
 
   const employerLinks = [
     { id: "profile", label: "My Profile", icon: <FaUser /> },
@@ -61,8 +73,8 @@ const Dashboard = () => {
               </button>
             ))}
             <button
-              onClick={logout}
-              className="flex items-center px-4 py-2 mt-6 text-gray-900 hover:bg-gray-400 rounded w-full text-left"
+              onClick={handleLogout}
+              className="flex items-center px-4 py-2 mt-6 text-gray-900 hover:bg-black hover:text-white rounded w-full text-left"
             >
               <FaSignOutAlt />
               <span className="ml-2">Logout</span>
