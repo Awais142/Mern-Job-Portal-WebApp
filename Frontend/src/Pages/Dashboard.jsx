@@ -11,7 +11,7 @@ import {
 import useLoginStore from "../Store/userStore/loginStore";
 import MyJobs from "../Components/MyJobs";
 import PostJob from "./PostJob";
-
+import Profile from "../Components/Profile";
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -23,11 +23,11 @@ const Dashboard = () => {
     console.log("handle logout");
   };
   // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate("/login");
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   const employerLinks = [
     { id: "profile", label: "My Profile", icon: <FaUser /> },
@@ -87,7 +87,7 @@ const Dashboard = () => {
       <main className="flex-grow bg-white p-6 w-3/4">
         <div className="text-gray-700 p-6 border border-gray-200 rounded-lg shadow-lg poppins-regular">
           {/* Conditionally render placeholders for each section */}
-          {selectedSection === "profile" && <div>Profile Section</div>}
+          {selectedSection === "profile" && <Profile />}
           {selectedSection === "update-profile" && (
             <div>Update Profile Section</div>
           )}

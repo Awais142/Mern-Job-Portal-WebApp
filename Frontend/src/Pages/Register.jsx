@@ -162,13 +162,13 @@ const Register = () => {
                 )}
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">First Niche</label>
+                <label className="block text-gray-700 mb-2">Second Niche</label>
                 <select
                   value={secondNiche}
-                  onChange={(e) => setField("firstNiche", e.target.value)}
+                  onChange={(e) => setField("secondNiche", e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
                 >
-                  <option value="">Select First Niche</option>
+                  <option value="">Select Second Niche</option>
                   {nichesArray.map((niche) => (
                     <option key={niche} value={niche}>
                       {niche}
@@ -183,10 +183,10 @@ const Register = () => {
                 <label className="block text-gray-700 mb-2">First Niche</label>
                 <select
                   value={thirdNiche}
-                  onChange={(e) => setField("firstNiche", e.target.value)}
+                  onChange={(e) => setField("thirdNiche", e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
                 >
-                  <option value="">Select First Niche</option>
+                  <option value="">Select Third Niche</option>
                   {nichesArray.map((niche) => (
                     <option key={niche} value={niche}>
                       {niche}
