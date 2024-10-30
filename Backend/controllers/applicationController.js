@@ -1,78 +1,84 @@
 import { Application } from "../models/applicationSchema.js";
 import { Job } from "../models/jobsSchema.js";
 
-export const postApplication = (req, res) => {
-  const { id } = req.params;
-  const { name, email, phone, address, coverLetter } = req.body;
+export const postApplication = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, phone, address, coverLetter } = req.body;
 
-  // Check for required fields
-  if (!name || !email || !phone || !address || !coverLetter) {
-    return res.status(400).json({
+    // Check for required fields
+    if (!name || !email || !phone || !address || !coverLetter) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
+
+    // Job Seeker Info
+    const jobSeekerInfo = {
+      id: req.user._id,
+      name,
+      email,
+      phone,
+      address,
+      coverLetter,
+      role: "Job Seeker",
+    };
+
+    // Find job details
+    const jobDetails = await Job.findById(id);
+    if (!jobDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found.",
+      });
+    }
+
+    // Check if the user has already applied for the job
+    const isAlreadyApplied = await Application.findOne({
+      "jobInfo.jobId": id,
+      "jobSeekerInfo.id": req.user._id,
+    });
+    if (isAlreadyApplied) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already applied for this job.",
+      });
+    }
+
+    // Use a default resume if not uploading
+    const resume = req.user?.resume || { public_id: null, url: null };
+
+    // Create employer and job info
+    const employerInfo = {
+      id: jobDetails.postedBy,
+      role: "Employer",
+    };
+    const jobInfo = {
+      jobId: id,
+      jobTitle: jobDetails.title,
+    };
+
+    // Create the application
+    const application = await Application.create({
+      jobSeekerInfo,
+      employerInfo,
+      jobInfo,
+      resume,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Application submitted successfully.",
+      application,
+    });
+  } catch (error) {
+    console.error("Error submitting application:", error);
+    res.status(500).json({
       success: false,
-      message: "All fields are required.",
+      message: "An error occurred while submitting the application.",
     });
   }
-
-  const jobSeekerInfo = {
-    id: req.user._id,
-    name,
-    email,
-    phone,
-    address,
-    coverLetter,
-    role: "Job Seeker",
-  };
-
-  // Find job details
-  const jobDetails = Job.findById(id);
-  if (!jobDetails) {
-    return res.status(404).json({
-      success: false,
-      message: "Job not found.",
-    });
-  }
-
-  // Check if the user has already applied for the job
-  const isAlreadyApplied = Application.findOne({
-    "jobInfo.jobId": id,
-    "jobSeekerInfo.id": req.user._id,
-  });
-  if (isAlreadyApplied) {
-    return res.status(400).json({
-      success: false,
-      message: "You have already applied for this job.",
-    });
-  }
-
-  // Use a default resume if not uploading
-  // let resume = {
-  //   public_id: req.user && req.user.resume ? req.user.resume.public_id : null,
-  //   url: req.user && req.user.resume ? req.user.resume.url : null,
-  // };
-
-  // Create job info
-  const employerInfo = {
-    id: jobDetails.postedBy,
-    role: "Employer",
-  };
-  const jobInfo = {
-    jobId: id,
-    jobTitle: jobDetails.title,
-  };
-
-  // Create the application
-  const application = Application.create({
-    jobSeekerInfo,
-    employerInfo,
-    jobInfo,
-    resume,
-  });
-
-  res.status(201).json({
-    success: true,
-    message: "Application submitted.",
-    application,
-  });
 };
 
 export const employerGetAllApplication = (req, res) => {

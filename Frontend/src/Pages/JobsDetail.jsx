@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../Components/Spinner";
 import useJobStore from "../Store/jobStore";
+import useLoginStore from "../Store/userStore/loginStore"; // Import loginStore to access user role
+import JobApplicationModal from "../Components/JobApplicationModal"; // Import the modal component
 import { FaMapMarkerAlt, FaDollarSign, FaCalendarAlt } from "react-icons/fa";
 
 const JobDetails = () => {
   const { id } = useParams(); // Get the job ID from URL params
   const { job, loading, error, fetchJobById } = useJobStore(); // Fetch job details from store
+  const { role } = useLoginStore(); // Fetch user info to get the role
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch the job details when the component mounts
   useEffect(() => {
@@ -16,10 +20,11 @@ const JobDetails = () => {
     fetchData();
   }, [id, fetchJobById]);
 
+  const handleApplyClick = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   if (loading) return <Spinner />; // Show spinner when loading
-
   if (error) return <p className="text-red-500">Error: {error}</p>; // Show error if any
-
   if (!job) return <p>Job not found</p>; // Handle case when job is not available
 
   return (
@@ -95,15 +100,24 @@ const JobDetails = () => {
         </div>
       )}
 
-      {/* Apply Button */}
-      <div className="text-right mt-8">
-        <a
-          href={`/apply/${job._id}`}
-          className="bg-gray-400 text-white px-6 py-3 rounded-lg hover:bg-gray-600"
-        >
-          Apply Now
-        </a>
-      </div>
+      {/* Apply Button - Only show if user is not an Employer */}
+      {role == "Job Seeker" && (
+        <div className="text-right mt-8">
+          <button
+            onClick={handleApplyClick}
+            className="bg-gray-400 text-white px-6 py-3 rounded-lg hover:bg-gray-600"
+          >
+            Apply Now
+          </button>
+        </div>
+      )}
+
+      {/* Application Modal */}
+      <JobApplicationModal
+        jobId={job._id}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </section>
   );
 };
