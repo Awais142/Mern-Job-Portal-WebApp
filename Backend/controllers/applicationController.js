@@ -95,18 +95,27 @@ export const employerGetAllApplication = (req, res) => {
   });
 };
 
-export const jobSeekerGetAllApplication = (req, res) => {
+// Backend controller function to get all applications for the logged-in job seeker
+export const jobSeekerGetAllApplication = async (req, res) => {
   const { _id } = req.user;
 
-  const applications = Application.find({
-    "jobSeekerInfo.id": _id,
-    "deletedBy.jobSeeker": false,
-  });
+  try {
+    const applications = await Application.find({
+      "jobSeekerInfo.id": _id,
+      "deletedBy.jobSeeker": false,
+    });
 
-  res.status(200).json({
-    success: true,
-    applications,
-  });
+    res.status(200).json({
+      success: true,
+      applications,
+    });
+  } catch (error) {
+    console.error("Error fetching applications:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve applications. Please try again later.",
+    });
+  }
 };
 
 export const deleteApplication = (req, res) => {
