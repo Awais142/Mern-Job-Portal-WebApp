@@ -93,6 +93,33 @@ const useLoginStore = create((set) => ({
       }
     }
   },
+  updatePassword: async (currentPassword, newPassword) => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      const response = await axios.put(
+        "http://127.0.0.1:5000/api/user/update-password",
+        { currentPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Set the token in the request headers
+          },
+          withCredentials: true, // Maintain user session if needed
+        }
+      );
+
+      console.log(response.data.message);
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      console.error(
+        "Password update failed:",
+        error.response?.data?.message || error.message
+      );
+      return {
+        success: false,
+        message: error.response?.data?.message || "Password update failed",
+      };
+    }
+  },
 }));
 
 export default useLoginStore;

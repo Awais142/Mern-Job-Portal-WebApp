@@ -12,6 +12,8 @@ import useLoginStore from "../Store/userStore/loginStore";
 import MyJobs from "../Components/MyJobs";
 import PostJob from "./PostJob";
 import Profile from "../Components/Profile";
+import UpdatePasswordComponent from "../Components/UpdatePasswordComponent";
+
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -91,9 +93,7 @@ const Dashboard = () => {
           {selectedSection === "update-profile" && (
             <div>Update Profile Section</div>
           )}
-          {selectedSection === "update-password" && (
-            <div>Update Password Section</div>
-          )}
+          {selectedSection === "update-password" && <UpdatePasswordComponent />}
           {selectedSection === "post-job" && <PostJob />}
           {selectedSection === "my-jobs" && <MyJobs />}
           {selectedSection === "applications" && (
