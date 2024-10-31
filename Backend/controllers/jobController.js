@@ -162,21 +162,37 @@ export const getMyJobs = async (req, res) => {
 export const deleteJob = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Check if the provided ID is valid
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid job ID format.",
+      });
+    }
+
     const job = await Job.findById(id);
 
+    // If job not found, return 404 response
     if (!job) {
-      return res.status(404).json({ message: "Oops! Job not found." });
+      return res.status(404).json({
+        success: false,
+        message: "Oops! Job not found.",
+      });
     }
 
     await job.deleteOne();
     res.status(200).json({
       success: true,
-      message: "Job deleted.",
+      message: "Job deleted successfully.",
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error deleting job.", error: error.message });
+    // Return a more detailed error message and status for easier debugging
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the job.",
+      error: error.message,
+    });
   }
 };
 

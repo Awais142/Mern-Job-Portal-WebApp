@@ -1,13 +1,30 @@
 import React, { useEffect } from "react";
-import useJobStore from "../Store/jobStore"; // Import the job store
+import useJobStore from "../Store/jobStore";
 
 const MyJobs = () => {
-  const { jobs, fetchMyJobs, loading, error } = useJobStore(); // Destructure state and actions from job store
+  const { jobs, fetchMyJobs, loading, error, deleteJob, deletingJobId } =
+    useJobStore();
 
   // Fetch jobs on component mount
   useEffect(() => {
     fetchMyJobs();
   }, [fetchMyJobs]);
+
+  // Handler for deleting a job
+  const handleDeleteJob = async (jobId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this job?"
+    );
+    if (!confirmed) return;
+
+    const result = await deleteJob(jobId);
+    if (result.success) {
+      alert(result.message);
+      fetchMyJobs(); // Refresh the list of jobs after deletion
+    } else {
+      alert(result.message || "Failed to delete job.");
+    }
+  };
 
   // Display loading message while jobs are being fetched
   if (loading) {
@@ -68,6 +85,17 @@ const MyJobs = () => {
             <p className="text-gray-700">
               <span className="font-semibold">Offers:</span> {job.offers}
             </p>
+
+            {/* Delete Button */}
+            <button
+              onClick={() => handleDeleteJob(job._id)}
+              className={`mt-4 px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-zinc-700 ${
+                deletingJobId === job._id ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={deletingJobId === job._id}
+            >
+              {deletingJobId === job._id ? "Deleting..." : "Delete Job"}
+            </button>
           </div>
         ))}
       </div>
