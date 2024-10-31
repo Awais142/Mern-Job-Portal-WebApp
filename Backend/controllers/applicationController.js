@@ -81,18 +81,32 @@ export const postApplication = async (req, res) => {
   }
 };
 
-export const employerGetAllApplication = (req, res) => {
-  const { _id } = req.user;
+export const employerGetAllApplication = async (req, res) => {
+  try {
+    const { _id } = req.user;
 
-  const applications = Application.find({
-    "employerInfo.id": _id,
-    "deletedBy.employer": false,
-  });
+    const applications = await Application.find({
+      "employerInfo.id": _id,
+      "deletedBy.employer": false,
+    });
 
-  res.status(200).json({
-    success: true,
-    applications,
-  });
+    if (!applications) {
+      return res.status(404).json({
+        success: false,
+        message: "No applications found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      applications,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch applications.",
+    });
+  }
 };
 
 // Backend controller function to get all applications for the logged-in job seeker

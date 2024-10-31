@@ -14,6 +14,7 @@ import PostJob from "./PostJob";
 import Profile from "../Components/Profile";
 import UpdatePasswordComponent from "../Components/UpdatePasswordComponent";
 import JobSeekerGetAllApps from "../Components/jobSeekerGetAllApps";
+import EmployerGetAllApps from "../Components/EmployerGetAllApps";
 
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
@@ -97,9 +98,7 @@ const Dashboard = () => {
           {selectedSection === "update-password" && <UpdatePasswordComponent />}
           {selectedSection === "post-job" && <PostJob />}
           {selectedSection === "my-jobs" && <MyJobs />}
-          {selectedSection === "applications" && (
-            <div>Applications Section</div>
-          )}
+          {selectedSection === "applications" && <EmployerGetAllApps />}
           {selectedSection === "my-applications" && <JobSeekerGetAllApps />}
         </div>
       </main>

@@ -64,6 +64,33 @@ const useApplicationStore = create((set) => ({
       });
     }
   },
+  fetchEmployerApplications: async () => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const response = await axios.get(
+        "http://127.0.0.1:5000/api/app/employer/getall",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      set({
+        applications: response.data.applications,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.response?.data?.message || "Failed to fetch applications.",
+      });
+    }
+  },
 }));
 
 export default useApplicationStore;
