@@ -244,3 +244,125 @@ export const updatePassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is available from authentication middleware
+    const {
+      name,
+      email,
+      phone,
+      address,
+      password,
+      role,
+      firstNiche,
+      secondNiche,
+      thirdNiche,
+      coverLetter,
+    } = req.body;
+
+    // Initialize an object to store field-specific errors
+    const errors = {};
+
+    // Field validation: Check if required fields are missing and add to errors
+    if (!name) errors.name = "Name is required.";
+    if (!email) errors.email = "Email is required.";
+    if (!phone) errors.phone = "Phone number is required.";
+    if (!address) errors.address = "Address is required.";
+    if (!role) errors.role = "Role is required.";
+
+    // Check for niches if the role is 'Job Seeker'
+    if (role === "Job Seeker") {
+      if (!firstNiche) errors.firstNiche = "First niche is required.";
+      if (!secondNiche) errors.secondNiche = "Second niche is required.";
+      if (!thirdNiche) errors.thirdNiche = "Third niche is required.";
+    }
+
+    // Return field-specific errors if any are present
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
+    }
+
+    // Check if the new email already exists (and it's not the current user's email)
+    const existingUser = await User.findOne({ email });
+    if (existingUser && existingUser._id.toString() !== userId) {
+      return res
+        .status(400)
+        .json({
+          errors: { email: "Email is already registered by another user." },
+        });
+    }
+
+    // Prepare updated user data
+    const updatedUserData = {
+      name,
+      email,
+      phone,
+      address,
+      role,
+      niches:
+        role === "Job Seeker" ? { firstNiche, secondNiche, thirdNiche } : null,
+      coverLetter,
+    };
+
+    // If password is provided, add it to the update
+    if (password) updatedUserData.password = password;
+
+    // If a new resume is uploaded, handle file upload
+    if (req.files && req.files.resume) {
+      const { resume } = req.files;
+      if (resume) {
+        try {
+          // Upload resume to Cloudinary
+          const cloudinaryResponse = await cloudinary.uploader.upload(
+            resume.tempFilePath,
+            {
+              folder: "Job_Seekers_Resume",
+              resource_type: "raw", // Treat it as a file (not an image)
+              use_filename: true, // Use the original file name
+              unique_filename: false, // Keep the file name unique
+              access_mode: "public", // Public access to the file
+            }
+          );
+
+          if (!cloudinaryResponse || cloudinaryResponse.error) {
+            return res.status(500).json({
+              errors: { resume: "Failed to upload resume to cloud." },
+            });
+          }
+
+          // Add resume information to updatedUserData
+          updatedUserData.resume = {
+            public_id: cloudinaryResponse.public_id,
+            url: cloudinaryResponse.secure_url,
+          };
+        } catch (error) {
+          return res
+            .status(500)
+            .json({ errors: { resume: "Failed to upload resume." } });
+        }
+      }
+    }
+
+    // Update user in the database
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validation rules are followed
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Send success response without the password
+    const userResponse = { ...updatedUser._doc };
+    delete userResponse.password;
+
+    res.status(200).json({
+      message: "Profile updated successfully.",
+      user: userResponse,
+    });
+  } catch (error) {
+    // Return a general error message if something went wrong
+    return res.status(500).json({ message: "An error occurred.", error });
+  }
+};
