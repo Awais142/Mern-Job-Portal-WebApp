@@ -120,6 +120,48 @@ const useLoginStore = create((set) => ({
       };
     }
   },
+  // Function to update user profile
+  updateProfile: async (profileData) => {
+    set({ isLoading: true, error: null, successMessage: null });
+
+    try {
+      // Get token from localStorage
+      const token = localStorage.getItem("token");
+
+      // Send update profile request
+      const response = await axios.put(
+        "http://127.0.0.1:5000/api/user/update-profile",
+        profileData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(profileData);
+      // Update user data and set success message
+      set({
+        user: response.data.user,
+        successMessage: "Profile updated successfully.",
+        isLoading: false,
+      });
+
+      // Return a success object
+      return { success: true };
+    } catch (error) {
+      // Handle errors
+      set({
+        error: error.response?.data?.message || "Failed to update profile.",
+        isLoading: false,
+      });
+
+      // Return a failure object
+      return {
+        success: false,
+        error: error.response?.data?.message || "Failed to update profile.",
+      };
+    }
+  },
 }));
 
 export default useLoginStore;

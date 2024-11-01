@@ -15,7 +15,7 @@ import Profile from "../Components/Profile";
 import UpdatePasswordComponent from "../Components/UpdatePasswordComponent";
 import JobSeekerGetAllApps from "../Components/jobSeekerGetAllApps";
 import EmployerGetAllApps from "../Components/EmployerGetAllApps";
-
+import UpdateProfile from "../Components/UpdateProfile";
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -92,9 +92,7 @@ const Dashboard = () => {
         <div className="text-gray-700 p-6 border border-gray-200 rounded-lg shadow-lg poppins-regular">
           {/* Conditionally render placeholders for each section */}
           {selectedSection === "profile" && <Profile />}
-          {selectedSection === "update-profile" && (
-            <div>Update Profile Section</div>
-          )}
+          {selectedSection === "update-profile" && <UpdateProfile />}
           {selectedSection === "update-password" && <UpdatePasswordComponent />}
           {selectedSection === "post-job" && <PostJob />}
           {selectedSection === "my-jobs" && <MyJobs />}

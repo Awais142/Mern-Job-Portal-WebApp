@@ -252,12 +252,11 @@ export const updateProfile = async (req, res) => {
       email,
       phone,
       address,
-      password,
-      role,
       firstNiche,
       secondNiche,
       thirdNiche,
       coverLetter,
+      role,
     } = req.body;
 
     // Initialize an object to store field-specific errors
@@ -268,7 +267,6 @@ export const updateProfile = async (req, res) => {
     if (!email) errors.email = "Email is required.";
     if (!phone) errors.phone = "Phone number is required.";
     if (!address) errors.address = "Address is required.";
-    if (!role) errors.role = "Role is required.";
 
     // Check for niches if the role is 'Job Seeker'
     if (role === "Job Seeker") {
@@ -285,11 +283,8 @@ export const updateProfile = async (req, res) => {
     // Check if the new email already exists (and it's not the current user's email)
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser._id.toString() !== userId) {
-      return res
-        .status(400)
-        .json({
-          errors: { email: "Email is already registered by another user." },
-        });
+      errors.email = "Email is already registered by another user.";
+      return res.status(400).json({ errors });
     }
 
     // Prepare updated user data
@@ -304,9 +299,6 @@ export const updateProfile = async (req, res) => {
       coverLetter,
     };
 
-    // If password is provided, add it to the update
-    if (password) updatedUserData.password = password;
-
     // If a new resume is uploaded, handle file upload
     if (req.files && req.files.resume) {
       const { resume } = req.files;
@@ -317,17 +309,16 @@ export const updateProfile = async (req, res) => {
             resume.tempFilePath,
             {
               folder: "Job_Seekers_Resume",
-              resource_type: "raw", // Treat it as a file (not an image)
-              use_filename: true, // Use the original file name
-              unique_filename: false, // Keep the file name unique
-              access_mode: "public", // Public access to the file
+              resource_type: "raw",
+              use_filename: true,
+              unique_filename: false,
+              access_mode: "public",
             }
           );
 
           if (!cloudinaryResponse || cloudinaryResponse.error) {
-            return res.status(500).json({
-              errors: { resume: "Failed to upload resume to cloud." },
-            });
+            errors.resume = "Failed to upload resume to cloud.";
+            return res.status(500).json({ errors });
           }
 
           // Add resume information to updatedUserData
@@ -336,17 +327,16 @@ export const updateProfile = async (req, res) => {
             url: cloudinaryResponse.secure_url,
           };
         } catch (error) {
-          return res
-            .status(500)
-            .json({ errors: { resume: "Failed to upload resume." } });
+          errors.resume = "Failed to upload resume.";
+          return res.status(500).json({ errors });
         }
       }
     }
 
     // Update user in the database
     const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, {
-      new: true, // Return the updated document
-      runValidators: true, // Ensure validation rules are followed
+      new: true,
+      runValidators: true,
     });
 
     if (!updatedUser) {
@@ -362,7 +352,6 @@ export const updateProfile = async (req, res) => {
       user: userResponse,
     });
   } catch (error) {
-    // Return a general error message if something went wrong
     return res.status(500).json({ message: "An error occurred.", error });
   }
 };
