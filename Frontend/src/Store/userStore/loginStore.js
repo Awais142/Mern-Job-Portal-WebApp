@@ -138,27 +138,35 @@ const useLoginStore = create((set) => ({
           },
         }
       );
+
       console.log(profileData);
+
       // Update user data and set success message
       set({
         user: response.data.user,
         successMessage: "Profile updated successfully.",
         isLoading: false,
+        error: null, // Clear any previous errors
       });
 
       // Return a success object
       return { success: true };
     } catch (error) {
       // Handle errors
+      const errorMessage =
+        error.response?.data?.errors ||
+        error.response?.data?.message ||
+        "Failed to update profile.";
+
       set({
-        error: error.response?.data?.message || "Failed to update profile.",
+        error: errorMessage, // Set the error object to show field-specific errors
         isLoading: false,
       });
 
-      // Return a failure object
+      // Return a failure object with the error details
       return {
         success: false,
-        error: error.response?.data?.message || "Failed to update profile.",
+        error: errorMessage,
       };
     }
   },

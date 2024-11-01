@@ -4,29 +4,28 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const UpdateProfile = () => {
-  const { user, role, updateProfile, error, fieldErrors } = useLoginStore();
+  const { user, role, updateProfile, error, successMessage } = useLoginStore();
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
     email: user?.email || "",
     phone: user?.phone || "",
     address: user?.address || "",
-    firstNiche: user?.firstNiche || "",
-    secondNiche: user?.secondNiche || "",
-    thirdNiche: user?.thirdNiche || "",
+    firstNiche: user?.niches?.firstNiche || "",
+    secondNiche: user?.niches?.secondNiche || "",
+    thirdNiche: user?.niches?.thirdNiche || "",
     coverLetter: user?.coverLetter || "",
     resume: null,
   });
 
   useEffect(() => {
-    // Reset form fields to latest data after each update
     setProfileData({
       name: user?.name || "",
       email: user?.email || "",
       phone: user?.phone || "",
       address: user?.address || "",
-      firstNiche: user?.firstNiche || "",
-      secondNiche: user?.secondNiche || "",
-      thirdNiche: user?.thirdNiche || "",
+      firstNiche: user?.niches?.firstNiche || "",
+      secondNiche: user?.niches?.secondNiche || "",
+      thirdNiche: user?.niches?.thirdNiche || "",
       coverLetter: user?.coverLetter || "",
       resume: null,
     });
@@ -44,20 +43,22 @@ const UpdateProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const result = await updateProfile(profileData);
+    const result = await updateProfile(profileData);
 
-      // Check if the result object exists and has the 'success' property
-      if (result && result.success) {
-        toast.success("Profile updated successfully!");
-      } else {
-        const errorMessage = result?.error || "Failed to update profile.";
-        toast.error(errorMessage);
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("An unexpected error occurred.");
+    if (result && result.success) {
+      toast.success("Profile updated successfully!");
+    } else {
+      // Display a toast message for general errors
+      toast.error("Failed to update profile.");
     }
+  };
+
+  // Function to get field-specific error message
+  const getFieldError = (fieldName) => {
+    if (error && typeof error === "object" && error[fieldName]) {
+      return error[fieldName];
+    }
+    return null;
   };
 
   return (
@@ -65,10 +66,13 @@ const UpdateProfile = () => {
       <h2 className="text-2xl font-semibold text-center mb-4">
         Update Profile
       </h2>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+      {/* Display a general error message if there's an error */}
+      {error && typeof error === "string" && (
+        <p className="text-red-500 text-center mb-4">{error}</p>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Common fields for all users */}
         <div>
           <label className="block text-sm font-medium">Name</label>
           <input
@@ -78,8 +82,8 @@ const UpdateProfile = () => {
             onChange={handleChange}
             className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
           />
-          {fieldErrors.name && (
-            <p className="text-red-500 text-sm">{fieldErrors.name}</p>
+          {getFieldError("name") && (
+            <p className="text-red-500 text-sm">{getFieldError("name")}</p>
           )}
         </div>
 
@@ -92,8 +96,8 @@ const UpdateProfile = () => {
             onChange={handleChange}
             className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
           />
-          {fieldErrors.email && (
-            <p className="text-red-500 text-sm">{fieldErrors.email}</p>
+          {getFieldError("email") && (
+            <p className="text-red-500 text-sm">{getFieldError("email")}</p>
           )}
         </div>
 
@@ -106,8 +110,8 @@ const UpdateProfile = () => {
             onChange={handleChange}
             className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
           />
-          {fieldErrors.phone && (
-            <p className="text-red-500 text-sm">{fieldErrors.phone}</p>
+          {getFieldError("phone") && (
+            <p className="text-red-500 text-sm">{getFieldError("phone")}</p>
           )}
         </div>
 
@@ -120,8 +124,8 @@ const UpdateProfile = () => {
             onChange={handleChange}
             className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
           />
-          {fieldErrors.address && (
-            <p className="text-red-500 text-sm">{fieldErrors.address}</p>
+          {getFieldError("address") && (
+            <p className="text-red-500 text-sm">{getFieldError("address")}</p>
           )}
         </div>
 
@@ -137,8 +141,10 @@ const UpdateProfile = () => {
                 onChange={handleChange}
                 className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
               />
-              {fieldErrors.firstNiche && (
-                <p className="text-red-500 text-sm">{fieldErrors.firstNiche}</p>
+              {getFieldError("firstNiche") && (
+                <p className="text-red-500 text-sm">
+                  {getFieldError("firstNiche")}
+                </p>
               )}
             </div>
 
@@ -151,9 +157,9 @@ const UpdateProfile = () => {
                 onChange={handleChange}
                 className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
               />
-              {fieldErrors.secondNiche && (
+              {getFieldError("secondNiche") && (
                 <p className="text-red-500 text-sm">
-                  {fieldErrors.secondNiche}
+                  {getFieldError("secondNiche")}
                 </p>
               )}
             </div>
@@ -167,8 +173,10 @@ const UpdateProfile = () => {
                 onChange={handleChange}
                 className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
               />
-              {fieldErrors.thirdNiche && (
-                <p className="text-red-500 text-sm">{fieldErrors.thirdNiche}</p>
+              {getFieldError("thirdNiche") && (
+                <p className="text-red-500 text-sm">
+                  {getFieldError("thirdNiche")}
+                </p>
               )}
             </div>
 
@@ -181,9 +189,9 @@ const UpdateProfile = () => {
                 className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:border-gray-400 focus:ring-zinc-600"
                 rows="3"
               />
-              {fieldErrors.coverLetter && (
+              {getFieldError("coverLetter") && (
                 <p className="text-red-500 text-sm">
-                  {fieldErrors.coverLetter}
+                  {getFieldError("coverLetter")}
                 </p>
               )}
             </div>
@@ -196,8 +204,10 @@ const UpdateProfile = () => {
                 onChange={handleFileChange}
                 className="mt-1 w-full p-2 border rounded focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-zinc-600"
               />
-              {fieldErrors.resume && (
-                <p className="text-red-500 text-sm">{fieldErrors.resume}</p>
+              {getFieldError("resume") && (
+                <p className="text-red-500 text-sm">
+                  {getFieldError("resume")}
+                </p>
               )}
             </div>
           </>
