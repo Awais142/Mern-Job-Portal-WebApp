@@ -259,6 +259,17 @@ export const updateProfile = async (req, res) => {
       role,
     } = req.body;
 
+    console.log("User Controller Input", {
+      name,
+      email,
+      phone,
+      address,
+      firstNiche,
+      secondNiche,
+      thirdNiche,
+      role,
+    });
+
     // Initialize an object to store field-specific errors
     const errors = {};
 
@@ -269,10 +280,17 @@ export const updateProfile = async (req, res) => {
     if (!address) errors.address = "Address is required.";
 
     // Check for niches if the role is 'Job Seeker'
+    let niches = null;
     if (role === "Job Seeker") {
       if (!firstNiche) errors.firstNiche = "First niche is required.";
       if (!secondNiche) errors.secondNiche = "Second niche is required.";
       if (!thirdNiche) errors.thirdNiche = "Third niche is required.";
+
+      // Construct the niches object
+      niches = { firstNiche, secondNiche, thirdNiche };
+      console.log("Niches constructed", niches);
+    } else {
+      console.log("Role is not 'Job Seeker', niches will not be set");
     }
 
     // Return field-specific errors if any are present
@@ -294,10 +312,13 @@ export const updateProfile = async (req, res) => {
       phone,
       address,
       role,
-      niches:
-        role === "Job Seeker" ? { firstNiche, secondNiche, thirdNiche } : null,
       coverLetter,
     };
+
+    // Add niches to updatedUserData only if it's constructed
+    if (niches) {
+      updatedUserData.niches = niches;
+    }
 
     // If a new resume is uploaded, handle file upload
     if (req.files && req.files.resume) {

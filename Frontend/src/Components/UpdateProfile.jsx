@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import useLoginStore from "../Store/userStore/loginStore";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { nichesArray } from "../Data/jobsData";
 
 const UpdateProfile = () => {
   const { user, role, updateProfile, error, successMessage } = useLoginStore();
+
+  // Include role in the initial state
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -15,8 +18,10 @@ const UpdateProfile = () => {
     thirdNiche: user?.niches?.thirdNiche || "",
     coverLetter: user?.coverLetter || "",
     resume: null,
+    role: role || "", // Initialize role from the store
   });
 
+  // Update state when the user or role changes
   useEffect(() => {
     setProfileData({
       name: user?.name || "",
@@ -28,18 +33,22 @@ const UpdateProfile = () => {
       thirdNiche: user?.niches?.thirdNiche || "",
       coverLetter: user?.coverLetter || "",
       resume: null,
+      role: role || "", // Update role dynamically
     });
-  }, [user]);
+  }, [user, role]);
 
+  // Handle input field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  // Handle file input change
   const handleFileChange = (e) => {
     setProfileData((prevData) => ({ ...prevData, resume: e.target.files[0] }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,12 +57,11 @@ const UpdateProfile = () => {
     if (result && result.success) {
       toast.success("Profile updated successfully!");
     } else {
-      // Display a toast message for general errors
       toast.error("Failed to update profile.");
     }
   };
 
-  // Function to get field-specific error message
+  // Get field-specific error messages
   const getFieldError = (fieldName) => {
     if (error && typeof error === "object" && error[fieldName]) {
       return error[fieldName];
@@ -67,7 +75,6 @@ const UpdateProfile = () => {
         Update Profile
       </h2>
 
-      {/* Display a general error message if there's an error */}
       {error && typeof error === "string" && (
         <p className="text-red-500 text-center mb-4">{error}</p>
       )}
@@ -129,18 +136,23 @@ const UpdateProfile = () => {
           )}
         </div>
 
-        {/* Additional fields for Job Seekers */}
         {role === "Job Seeker" && (
           <>
-            <div>
-              <label className="block text-sm font-medium">First Niche</label>
-              <input
-                type="text"
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">First Niche</label>
+              <select
                 name="firstNiche"
                 value={profileData.firstNiche}
                 onChange={handleChange}
-                className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
-              />
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
+              >
+                <option value="">Select First Niche</option>
+                {nichesArray.map((niche) => (
+                  <option key={niche} value={niche}>
+                    {niche}
+                  </option>
+                ))}
+              </select>
               {getFieldError("firstNiche") && (
                 <p className="text-red-500 text-sm">
                   {getFieldError("firstNiche")}
@@ -148,15 +160,21 @@ const UpdateProfile = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium">Second Niche</label>
-              <input
-                type="text"
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Second Niche</label>
+              <select
                 name="secondNiche"
                 value={profileData.secondNiche}
                 onChange={handleChange}
-                className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
-              />
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
+              >
+                <option value="">Select Second Niche</option>
+                {nichesArray.map((niche) => (
+                  <option key={niche} value={niche}>
+                    {niche}
+                  </option>
+                ))}
+              </select>
               {getFieldError("secondNiche") && (
                 <p className="text-red-500 text-sm">
                   {getFieldError("secondNiche")}
@@ -164,15 +182,21 @@ const UpdateProfile = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium">Third Niche</label>
-              <input
-                type="text"
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Third Niche</label>
+              <select
                 name="thirdNiche"
                 value={profileData.thirdNiche}
                 onChange={handleChange}
-                className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-gray-400"
-              />
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-100"
+              >
+                <option value="">Select Third Niche</option>
+                {nichesArray.map((niche) => (
+                  <option key={niche} value={niche}>
+                    {niche}
+                  </option>
+                ))}
+              </select>
               {getFieldError("thirdNiche") && (
                 <p className="text-red-500 text-sm">
                   {getFieldError("thirdNiche")}
