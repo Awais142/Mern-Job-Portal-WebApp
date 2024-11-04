@@ -239,7 +239,7 @@ const UpdateProfile = () => {
 
         <button
           type="submit"
-          className="w-full p-2 bg-gray-400 text-white font-semibold rounded-lg hover:bg-gray-700"
+          className="w-full p-2 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-900"
         >
           Update
         </button>

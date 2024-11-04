@@ -89,7 +89,7 @@ const MyJobs = () => {
             {/* Delete Button */}
             <button
               onClick={() => handleDeleteJob(job._id)}
-              className={`mt-4 px-4 py-2 text-white bg-gray-500 rounded-lg hover:bg-zinc-700 ${
+              className={`mt-4 px-4 py-2 text-white bg-gray-700 rounded-lg hover:bg-zinc-900 ${
                 deletingJobId === job._id ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={deletingJobId === job._id}

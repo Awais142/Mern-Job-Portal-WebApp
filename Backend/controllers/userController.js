@@ -292,12 +292,10 @@ export const updateProfile = async (req, res) => {
     } else {
       console.log("Role is not 'Job Seeker', niches will not be set");
     }
-
     // Return field-specific errors if any are present
     if (Object.keys(errors).length > 0) {
       return res.status(400).json({ errors });
     }
-
     // Check if the new email already exists (and it's not the current user's email)
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser._id.toString() !== userId) {
