@@ -4,7 +4,10 @@ import { FaMapMarkerAlt, FaDollarSign, FaCalendarAlt } from "react-icons/fa"; //
 
 const Card = ({ title, companyName, location, salary, postedOn, link }) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 relative min-h-72 hover:cursor-pointer hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out">
+    <Link
+      to={link}
+      className="bg-white shadow-md rounded-lg p-6 relative min-h-72 hover:cursor-pointer hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
+    >
       <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
       <p className="text-gray-700 mt-1">Company: {companyName}</p>
 
@@ -24,13 +27,10 @@ const Card = ({ title, companyName, location, salary, postedOn, link }) => {
         {postedOn.substring(0, 10)}
       </p>
 
-      <Link
-        to={link}
-        className="absolute bottom-4 right-4 text-zinc-600 hover:text-zinc-800"
-      >
+      <span className="absolute bottom-4 right-4 text-zinc-600 hover:text-zinc-800">
         Learn More →
-      </Link>
-    </div>
+      </span>
+    </Link>
   );
 };
 
