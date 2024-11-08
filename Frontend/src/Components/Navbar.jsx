@@ -36,7 +36,13 @@ const Navbar = () => {
     <nav className="bg-gray-100 w-full p-4 fixed top-0 left-0 z-50">
       <div className="flex justify-between items-center max-w-7xl mx-auto poppins-semibold">
         {/* Logo */}
-        <div className="text-2xl font-bold text-gray-800">MyLogo</div>
+        <div className="text-2xl font-bold text-gray-800">
+          <img
+            src="src/assets/images/logo.png"
+            alt="logo"
+            className="h-[50px] w-[120px]"
+          />
+        </div>
 
         {/* Desktop Links */}
         <ul className="hidden md:flex space-x-8 text-gray-700">
