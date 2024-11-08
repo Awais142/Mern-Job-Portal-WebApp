@@ -14,7 +14,7 @@ const Settings = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-100 mt-12">
+    <div className="flex min-h-screen bg-gray-100 mt-20">
       {/* Sidebar (25% width) */}
       <div className="aside flex-grow bg-white p-6 w-1/4">
         <aside className="bg-white text-black poppins-regular p-6 border border-gray-200 rounded-lg shadow-lg">
