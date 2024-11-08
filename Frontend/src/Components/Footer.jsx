@@ -1,5 +1,6 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-gray-200 to-gray-300">
@@ -12,8 +13,9 @@ const Footer = () => {
               alt="logo"
             />
             <p className="max-w-xs mt-4 text-sm text-gray-600">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas,
-              accusantium.
+              Your go-to platform for finding top talent or your next career
+              opportunity. Simplifying the hiring process and empowering job
+              seekers.
             </p>
             <div className="flex mt-8 space-x-6 text-gray-600">
               <a
@@ -89,29 +91,29 @@ const Footer = () => {
               <h3 className="text-xl font-semibold">Customer Support</h3>
               <ul className="mt-4 space-y-4">
                 <li>
-                  <a
+                  <Link
                     className="text-sm text-gray-600 hover:text-gray-500"
-                    href="#"
+                    to="/"
                   >
-                    Contact Us
-                  </a>
+                    Home
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     className="text-sm text-gray-600 hover:text-gray-500"
-                    href="#"
+                    to="/about-us"
                   >
-                    Help Center
-                  </a>
+                    About Us
+                  </Link>
                 </li>
                 <li>
                   {" "}
-                  <a
+                  <Link
                     className="text-sm text-gray-600 hover:text-gray-500"
-                    href="#"
+                    to="/jobs"
                   >
                     Jobs
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -138,7 +140,7 @@ const Footer = () => {
 
         <div className="mt-16 text-center text-sm text-gray-600">
           <hr className=" border-1 border-gray-600 mb-6" />
-          &copy; 2024. All rights reserved.
+          &copy; 2024. JOBS CONSTRUCTIONS All rights reserved.
         </div>
       </div>
     </footer>
