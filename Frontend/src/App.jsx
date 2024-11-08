@@ -9,6 +9,7 @@ import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
 import ForgotPassword from "./Components/ForgotPassword";
+import Settings from "./Pages/Settings";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
 

@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  FaUser,
-  FaEdit,
-  FaLock,
-  FaSignOutAlt,
-  FaBriefcase,
-  FaClipboardList,
-} from "react-icons/fa";
+import { FaBriefcase, FaClipboardList } from "react-icons/fa";
 import useLoginStore from "../Store/userStore/loginStore";
 import MyJobs from "../Components/MyJobs";
 import PostJob from "./PostJob";
-import Profile from "../Components/Profile";
-import UpdatePasswordComponent from "../Components/UpdatePasswordComponent";
 import JobSeekerGetAllApps from "../Components/jobSeekerGetAllApps";
 import EmployerGetAllApps from "../Components/EmployerGetAllApps";
-import UpdateProfile from "../Components/UpdateProfile";
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -34,18 +24,12 @@ const Dashboard = () => {
   // }, [isAuthenticated, navigate]);
 
   const employerLinks = [
-    { id: "profile", label: "My Profile", icon: <FaUser /> },
-    { id: "update-profile", label: "Update Profile", icon: <FaEdit /> },
-    { id: "update-password", label: "Update Password", icon: <FaLock /> },
     { id: "post-job", label: "Post New Job", icon: <FaBriefcase /> },
     { id: "my-jobs", label: "My Jobs", icon: <FaClipboardList /> },
     { id: "applications", label: "Applications", icon: <FaClipboardList /> },
   ];
 
   const jobSeekerLinks = [
-    { id: "profile", label: "My Profile", icon: <FaUser /> },
-    { id: "update-profile", label: "Update Profile", icon: <FaEdit /> },
-    { id: "update-password", label: "Update Password", icon: <FaLock /> },
     {
       id: "my-applications",
       label: "My Applications",
@@ -56,7 +40,7 @@ const Dashboard = () => {
   const renderLinks = role === "Employer" ? employerLinks : jobSeekerLinks;
 
   return (
-    <div className="flex min-h-screen bg-gray-100 mt-12">
+    <div className="flex min-h-screen bg-gray-100 mt-20">
       {/* Sidebar (25% width) */}
       <div className="aside flex-grow bg-white p-6 w-1/4">
         <aside className=" bg-white text-black poppins-regular p-6 border border-gray-200 rounded-lg shadow-lg">
@@ -76,13 +60,6 @@ const Dashboard = () => {
                 <span className="ml-2">{link.label}</span>
               </button>
             ))}
-            <button
-              onClick={handleLogout}
-              className="flex items-center px-4 py-2 mt-6 text-gray-900 hover:bg-black hover:text-white rounded w-full text-left"
-            >
-              <FaSignOutAlt />
-              <span className="ml-2">Logout</span>
-            </button>
           </nav>
         </aside>
       </div>
@@ -91,9 +68,6 @@ const Dashboard = () => {
       <main className="flex-grow bg-white p-6 w-3/4">
         <div className="text-gray-700 p-6 border border-gray-200 rounded-lg shadow-lg poppins-regular">
           {/* Conditionally render placeholders for each section */}
-          {selectedSection === "profile" && <Profile />}
-          {selectedSection === "update-profile" && <UpdateProfile />}
-          {selectedSection === "update-password" && <UpdatePasswordComponent />}
           {selectedSection === "post-job" && <PostJob />}
           {selectedSection === "my-jobs" && <MyJobs />}
           {selectedSection === "applications" && <EmployerGetAllApps />}
