@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Spinner from "../Components/Spinner";
@@ -70,8 +72,8 @@ export default function Jobs() {
 
             {/* Collapsible Sidebar */}
             <div
-              className={`mt-20 filter-bar bg-white p-4 fixed top-0 bottom-0 z-20 shadow-lg transition-transform duration-300 ease-in-out overflow-y-auto max-h-screen ${
-                isSidebarOpen ? "translate-x-0 w-64" : "-translate-x-full w-0"
+              className={`mt-20 filter-bar w-64 bg-white p-4 fixed left-0 top-0 bottom-0 z-20 shadow-lg transition-transform duration-300 ease-in-out ${
+                isSidebarOpen ? "translate-x-0" : "-translate-x-full"
               }`}
             >
               <div className="cities mb-8">
@@ -117,11 +119,9 @@ export default function Jobs() {
 
             {/* Job Cards */}
             <div
-              className={`jobs_container grid w-full transition-all duration-300 ${
-                isSidebarOpen
-                  ? "ml-64 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-              }`}
+              className={`jobs_container ${
+                isSidebarOpen ? "md:ml-64" : "ml-0"
+              } w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[min-content] transition-all duration-300 ease-in-out`}
             >
               {jobs.map((job) => (
                 <Card
