@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Spinner from "../Components/Spinner";
 import useJobStore from "../Store/jobStore";
 import { cities, nichesArray } from "../Data/jobsData";
 import Card from "../Components/Card";
 
-const Jobs = () => {
+export default function Jobs() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedNiche, setSelectedNiche] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const { jobs, loading, error, fetchJobs } = useJobStore();
 
-  // Trigger fetch only when the user clicks the search button or changes filters
   const handleSearch = () => {
     fetchJobs(selectedCity, selectedNiche, searchKeyword);
   };
 
-  // Run useEffect to fetch jobs only when component mounts, or filters change explicitly
   useEffect(() => {
     fetchJobs(selectedCity, selectedNiche, searchKeyword);
   }, [selectedCity, selectedNiche]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <>
@@ -50,9 +54,26 @@ const Jobs = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row mt-8">
-            {/* Sidebar Filters */}
-            <div className="filter-bar w-full md:w-1/4 mb-8 md:mb-0 md:mr-4">
+          <div className="flex flex-col md:flex-row mt-8 relative">
+            {/* Sidebar Toggle Button */}
+            <button
+              onClick={toggleSidebar}
+              className="fixed left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-r-md shadow-md z-30"
+              aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+            >
+              {isSidebarOpen ? (
+                <ChevronLeft className="h-6 w-6" />
+              ) : (
+                <ChevronRight className="h-6 w-6" />
+              )}
+            </button>
+
+            {/* Collapsible Sidebar */}
+            <div
+              className={`mt-20 filter-bar bg-white p-4 fixed top-0 bottom-0 z-20 shadow-lg transition-transform duration-300 ease-in-out overflow-y-auto max-h-screen ${
+                isSidebarOpen ? "translate-x-0 w-64" : "-translate-x-full w-0"
+              }`}
+            >
               <div className="cities mb-8">
                 <h2 className="text-md font-semibold mb-4">Filter by City</h2>
                 {cities.map((city, index) => (
@@ -95,7 +116,13 @@ const Jobs = () => {
             </div>
 
             {/* Job Cards */}
-            <div className="jobs_container w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[min-content]">
+            <div
+              className={`jobs_container grid w-full transition-all duration-300 ${
+                isSidebarOpen
+                  ? "ml-64 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              }`}
+            >
               {jobs.map((job) => (
                 <Card
                   key={job._id}
@@ -113,6 +140,4 @@ const Jobs = () => {
       )}
     </>
   );
-};
-
-export default Jobs;
+}

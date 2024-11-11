@@ -20,6 +20,7 @@
     "express": "^4.21.1",
     "express-fileupload": "^1.5.1",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.456.0",
     "mongoose": "^8.7.1",
     "validator": "^13.12.0"
   },
