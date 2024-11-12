@@ -31,7 +31,7 @@ const Hero = () => {
 
             {/* Post a Job Button */}
             <Link
-              to="/post-job"
+              to="/register"
               className="border-2 border-zinc-500 text-zinc-900 hover:text-white hover:bg-zinc-900 px-6 py-3 rounded-lg font-semibold tracking-tight"
             >
               Post a Job
