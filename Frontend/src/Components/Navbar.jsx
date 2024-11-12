@@ -103,6 +103,7 @@ const Navbar = () => {
             </div>
           ) : (
             <>
+              <span className="text-gray-500">|</span>
               <Link
                 to="/login"
                 className="hover:text-gray-900 py-2 px-4 transition-all duration-300 underline-offset-2 relative group"
@@ -111,13 +112,6 @@ const Navbar = () => {
                 <div className="absolute left-0 -bottom-1 w-full h-[2px] bg-gray-700 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
               </Link>
               <span className="text-gray-500">|</span>
-              <Link
-                to="#faq-sec"
-                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg shadow-lg hover:bg-gray-100 transition-all duration-300 relative group"
-              >
-                Frequently Asked Questions
-                <div className="absolute left-0 -bottom-1 w-full h-[2px] bg-gray-700 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
-              </Link>
             </>
           )}
         </div>
