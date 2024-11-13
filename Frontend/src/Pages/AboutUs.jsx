@@ -7,7 +7,7 @@ export default function AboutUs() {
       {/* Header */}
       <header className="bg-gray-700-600 text-black py-20 px-4 text-center">
         <h1 className="text-5xl font-bold mb-4">About Jobs Construction</h1>
-        <p className="text-2xl">Building Careers, Constructing Futures</p>
+        <p className="text-2xl">Building Careers, Shaping Futures</p>
       </header>
 
       {/* Our Journey */}
@@ -18,23 +18,22 @@ export default function AboutUs() {
             <div className="md:w-1/2">
               <img
                 src="https://images.pexels.com/photos/4050319/pexels-photo-4050319.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                alt="Construction site"
+                alt="Diverse workplace"
                 className="rounded-lg shadow-lg w-full h-auto"
               />
             </div>
             <div className="md:w-1/2">
               <p className="text-lg mb-4">
-                Founded in 2010, Jobs Construction has been at the forefront of
-                connecting talented professionals with exciting opportunities in
-                the construction industry. Our platform has grown from a small
-                startup to a leading job marketplace, serving thousands of job
-                seekers and employers across the nation.
+                Founded in 2010, Jobs Construction has become a trusted platform
+                for job seekers across various fields, helping connect talented
+                professionals with leading employers nationwide. What started as
+                a small platform for job matching has grown into a comprehensive
+                career network for professionals in multiple industries.
               </p>
               <p className="text-lg">
-                Over the years, we've continuously evolved our services to meet
-                the changing needs of the construction sector, always staying
-                true to our core mission of facilitating meaningful career
-                connections.
+                Over the years, we’ve continued to expand our services, adapting
+                to the needs of a dynamic job market and empowering
+                professionals to build successful, meaningful careers.
               </p>
             </div>
           </div>
@@ -50,7 +49,7 @@ export default function AboutUs() {
               <Users size={48} className="mb-4" />
               <h3 className="text-xl font-semibold mb-2">Connect Talent</h3>
               <p>
-                Bridging the gap between skilled professionals and construction
+                Bridging the gap between skilled professionals and diverse job
                 opportunities.
               </p>
             </div>
@@ -58,18 +57,16 @@ export default function AboutUs() {
               <Briefcase size={48} className="mb-4" />
               <h3 className="text-xl font-semibold mb-2">Empower Careers</h3>
               <p>
-                Providing tools and resources for career growth and development
-                in construction.
+                Offering resources and tools for career growth across all
+                industries.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
               <Target size={48} className="mb-4" />
-              <h3 className="text-xl font-semibold mb-2">
-                Industry Innovation
-              </h3>
+              <h3 className="text-xl font-semibold mb-2">Drive Innovation</h3>
               <p>
-                Driving progress in the construction sector through cutting-edge
-                job matching technology.
+                Pushing boundaries in job-matching technology to transform
+                hiring practices.
               </p>
             </div>
           </div>
@@ -126,18 +123,19 @@ export default function AboutUs() {
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <Quote className="text-gray-700 mb-4" size={32} />
               <p className="text-lg mb-4">
-                "Jobs Construction helped me find my dream job in the
-                construction industry. The platform is user-friendly and the job
-                listings are always up-to-date."
+                "Jobs Construction connected me with a role that aligns
+                perfectly with my career goals. The platform is easy to
+                navigate, and there are always new listings from reputable
+                companies."
               </p>
               <p className="font-semibold">- Mike Johnson, Project Manager</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <Quote className="text-gray-700 mb-4" size={32} />
               <p className="text-lg mb-4">
-                "As an employer, I've found exceptional talent through Jobs
-                Construction. Their service has streamlined our hiring process
-                and improved the quality of our workforce."
+                "Jobs Construction has been a game-changer for our recruitment
+                process. We’ve been able to reach top candidates in record
+                time."
               </p>
               <p className="font-semibold">- Sarah Lee, HR Director</p>
             </div>
