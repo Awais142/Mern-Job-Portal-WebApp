@@ -42,7 +42,7 @@ export default function Jobs() {
                 type="text"
                 name="search"
                 id="search"
-                className="block w-full rounded-md border-0 py-4 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-4 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                 placeholder="Search for jobs"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
@@ -76,44 +76,38 @@ export default function Jobs() {
                 isSidebarOpen ? "translate-x-0" : "-translate-x-full"
               }`}
             >
+              {/* City Dropdown */}
               <div className="cities mb-8">
                 <h2 className="text-md font-semibold mb-4">Filter by City</h2>
-                {cities.map((city, index) => (
-                  <div key={index} className="mt-2">
-                    <input
-                      type="radio"
-                      id={city}
-                      name="city"
-                      value={city}
-                      checked={selectedCity === city}
-                      onChange={() => setSelectedCity(city)}
-                      className="mr-2"
-                    />
-                    <label htmlFor={city} className="text-sm text-gray-600">
+                <select
+                  value={selectedCity}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md py-2 px-3"
+                >
+                  <option value="">Select a City</option>
+                  {cities.map((city, index) => (
+                    <option key={index} value={city}>
                       {city}
-                    </label>
-                  </div>
-                ))}
+                    </option>
+                  ))}
+                </select>
               </div>
 
+              {/* Niche Dropdown */}
               <div className="niches">
                 <h2 className="text-md font-semibold mb-4">Filter by Niche</h2>
-                {nichesArray.map((niche, index) => (
-                  <div key={index} className="mt-2">
-                    <input
-                      type="radio"
-                      id={niche}
-                      name="niche"
-                      value={niche}
-                      checked={selectedNiche === niche}
-                      onChange={() => setSelectedNiche(niche)}
-                      className="mr-2"
-                    />
-                    <label htmlFor={niche} className="text-sm text-gray-600">
+                <select
+                  value={selectedNiche}
+                  onChange={(e) => setSelectedNiche(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md py-2 px-3"
+                >
+                  <option value="">Select a Niche</option>
+                  {nichesArray.map((niche, index) => (
+                    <option key={index} value={niche}>
                       {niche}
-                    </label>
-                  </div>
-                ))}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

@@ -8,7 +8,7 @@ import JobSeekerGetAllApps from "../Components/jobSeekerGetAllApps";
 import EmployerGetAllApps from "../Components/EmployerGetAllApps";
 const Dashboard = () => {
   const { user, role, logout, isAuthenticated } = useLoginStore();
-  const [selectedSection, setSelectedSection] = useState("Applications");
+  const [selectedSection, setSelectedSection] = useState("");
   const navigate = useNavigate();
 
   const handleLogout = () => {
