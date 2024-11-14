@@ -2,11 +2,12 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaAddressBook, FaEnvelope, FaRegUser, FaPhone } from "react-icons/fa";
 import { RiLock2Fill } from "react-icons/ri";
+import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { nichesArray } from "../Data/jobsData";
 import useRegisterStore from "../Store/userStore/registerStore"; // Import Zustand store
-
+import useLoginStore from "../Store/userStore/loginStore";
 const Register = () => {
   const navigateTo = useNavigate();
   const {
@@ -26,6 +27,15 @@ const Register = () => {
     register,
     isLoading,
   } = useRegisterStore();
+
+  const { isAuthenticated } = useLoginStore(); // Get auth status and role from auth store
+
+  useEffect(() => {
+    // Redirect if user is logged in and role is "Employer"
+    if (isAuthenticated) {
+      navigateTo("/dashboard");
+    }
+  }, [isAuthenticated, navigateTo]);
 
   const handleRegister = async (e) => {
     e.preventDefault();

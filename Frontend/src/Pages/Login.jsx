@@ -4,8 +4,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useLoginStore from "../Store/userStore/loginStore"; // Import the Zustand store
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const LoginForm = () => {
+  const navigateTo = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
@@ -15,6 +17,13 @@ const LoginForm = () => {
   const login = useLoginStore((state) => state.login);
   const error = useLoginStore((state) => state.error);
   const fieldErrors = useLoginStore((state) => state.fieldErrors); // New field-specific errors
+  const { isAuthenticated } = useLoginStore();
+  useEffect(() => {
+    // Redirect if user is logged in and role is "Employer"
+    if (isAuthenticated) {
+      navigateTo("/dashboard");
+    }
+  }, [isAuthenticated, navigateTo]);
 
   // Handle form submission
   const handleSubmit = async (e) => {
